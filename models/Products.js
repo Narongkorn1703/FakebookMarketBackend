@@ -71,6 +71,11 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.ENUM,
         values: ["true", "false"],
       },
+      boostStatus: {
+        type: DataTypes.ENUM,
+        values: ["true", "false"],
+      },
+      bidValue: DataTypes.DECIMAL(10, 1),
     },
     {
       underscored: true,
@@ -84,15 +89,7 @@ module.exports = (sequelize, DataTypes) => {
         field: `user_id`,
       },
     });
-    Products.hasOne(models.BoostProduct, {
-      foreignKey: {
-        name: `productId`,
-        allowNull: false,
-        field: `product_id`,
-      },
-      onUpdate: `RESTRICT`,
-      onDelete: `RESTRICT`,
-    });
+
     Products.hasMany(models.Saved, {
       foreignKey: {
         name: `productId`,
