@@ -32,6 +32,10 @@ module.exports = (sequelize, DataTypes) => {
         defaultValue: "USER",
         allowNull: false,
       },
+      bio: {
+        type: DataTypes.ENUM,
+        values: ["MALE", "FEMALE", "OTHER"],
+      },
       location: DataTypes.STRING,
       avatar: {
         type: DataTypes.STRING,
