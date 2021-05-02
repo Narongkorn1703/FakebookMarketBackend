@@ -55,11 +55,11 @@ module.exports = (sequelize, DataTypes) => {
       numberOfBed: DataTypes.INTEGER,
       numberOfBathroom: DataTypes.INTEGER,
       area: DataTypes.STRING,
-      estate_type: {
+      estateType: {
         type: DataTypes.ENUM,
         values: ["Condo", "House", "Apartment"],
       },
-      estate_for: {
+      estateFor: {
         type: DataTypes.ENUM,
         values: ["RENT", "SALE"],
       },
