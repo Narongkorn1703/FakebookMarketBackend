@@ -63,9 +63,9 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.ENUM,
         values: ["RENT", "SALE"],
       },
-      statusDaft: {
+      statusDraft: {
         type: DataTypes.ENUM,
-        values: ["Daft", "Done"],
+        values: ["Draft", "Done"],
       },
       petFriendly: {
         type: DataTypes.ENUM,
