@@ -8,7 +8,7 @@ module.exports = (sequelize, DataTypes) => {
         field: `user_id`,
       },
     });
-    Saved.belongsTo(models.Products, {
+    Saved.belongsTo(models.Product, {
       foreignKey: {
         name: `productId`,
         allowNull: false,

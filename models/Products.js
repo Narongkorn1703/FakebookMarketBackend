@@ -1,42 +1,44 @@
 module.exports = (sequelize, DataTypes) => {
-  const Products = sequelize.define(
-    "Products",
+  const Product = sequelize.define(
+    "Product",
     {
-      title: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
-      photo: DataTypes.STRING,
+      title:DataTypes.STRING,  
+      photos: DataTypes.ARRAY(DataTypes.CHAR(2048)),
       price: DataTypes.DECIMAL(10, 2),
-      categories: {
+      category: {
         type: DataTypes.ENUM,
-        values: [
-          "Home&Garden",
-          "Entertainment",
-          "Clothing&Accessories",
-          "Family",
-          "Electronics",
-          "HOBBIES",
-          "Classifieds",
-          "Vehicle",
+        values: ["Home & Garden",	"Clothing & Accessories",	"Electronics",	"Family",	"Hobbies",	"Entertainment", "Vehicle"]
+      },
+      subCategory: {
+        type: DataTypes.ENUM, 
+        values: ["Tools",
+        "Furniture",
+        "Garden",
+        "Appliances",
+        "Household",
+        "Jewelry & Accessories",	"Cellphones",	"Toys & Games",	"Sports & Outdoors",	"Books", "Movies & Music",
+        "Bag & Luggage","Electronics & Computers",	"Baby & kids","	Musical Instruments",	"Video Games",
+        "Men's Clothing & Shoes",		"Pet Supplies",	"Arts & Crafts"	,
+        "Women's Clothing & Shoes",		"Healthy & Beauty",	"Antiques & Collectibles",
+        "Auto Parts",	
+        "Bicycles","Vehicle","Property Rental"	
         ],
-        allowNull: false,
       },
       condition: {
         type: DataTypes.ENUM,
-        values: ["NEW", "USED-LIKE-NEW", "USED-GOOD", "USED-FAIR"],
+        values: ["New", "Used - Like New", "Used - Good", "Used - Fair"],
       },
       description: DataTypes.STRING,
       optional: DataTypes.STRING,
       location: DataTypes.STRING,
-      availability: {
-        type: DataTypes.ENUM,
-        values: ["OUTOFSTOCK", "AVAILABLE"],
-      },
       productType: {
         type: DataTypes.ENUM,
-        values: ["ITEMS", "VEHICLE", "HOME"],
+        values: ["ITEM", "VEHICLE", "HOME"],
         allowNull: false,
+      },
+      productStatus: {
+        type: DataTypes.ENUM,
+        values: ["Pending", "Out of Stock", "Draft", "Available", "Sold", "Rented", "In Stock", "Single Item"]
       },
       vehicleType: {
         type: DataTypes.STRING,
@@ -63,26 +65,16 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.ENUM,
         values: ["RENT", "SALE"],
       },
-      statusDraft: {
-        type: DataTypes.ENUM,
-        values: ["Draft", "Done"],
-      },
-      petFriendly: {
-        type: DataTypes.ENUM,
-        values: ["true", "false"],
-      },
-      boostStatus: {
-        type: DataTypes.ENUM,
-        values: ["true", "false"],
-      },
+      petFriendly: DataTypes.BOOLEAN,
+      boostStatus: DataTypes.BOOLEAN,
       bidValue: DataTypes.DECIMAL(10, 1),
     },
     {
       underscored: true,
     }
   );
-  Products.associate = (models) => {
-    Products.belongsTo(models.User, {
+  Product.associate = (models) => {
+    Product.belongsTo(models.User, {
       foreignKey: {
         name: `userId`,
         allowNull: false,
@@ -90,7 +82,7 @@ module.exports = (sequelize, DataTypes) => {
       },
     });
 
-    Products.hasMany(models.Saved, {
+    Product.hasMany(models.Saved, {
       foreignKey: {
         name: `productId`,
         allowNull: false,
@@ -100,5 +92,5 @@ module.exports = (sequelize, DataTypes) => {
       onDelete: `RESTRICT`,
     });
   };
-  return Products;
+  return Product;
 };

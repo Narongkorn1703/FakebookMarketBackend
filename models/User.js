@@ -51,7 +51,7 @@ module.exports = (sequelize, DataTypes) => {
     }
   );
   User.associate = (models) => {
-    User.hasMany(models.Followers, {
+    User.hasMany(models.Follower, {
       foreignKey: {
         name: `userId`,
         allowNull: false,
@@ -60,7 +60,7 @@ module.exports = (sequelize, DataTypes) => {
       onUpdate: `RESTRICT`,
       onDelete: `RESTRICT`,
     });
-    User.hasMany(models.Followers, {
+    User.hasMany(models.Follower, {
       foreignKey: {
         name: `followerId`,
         allowNull: false,
@@ -87,7 +87,7 @@ module.exports = (sequelize, DataTypes) => {
       onUpdate: `RESTRICT`,
       onDelete: `RESTRICT`,
     });
-    User.hasMany(models.Products, {
+    User.hasMany(models.Product, {
       foreignKey: {
         name: `userId`,
         allowNull: false,
@@ -144,3 +144,4 @@ module.exports = (sequelize, DataTypes) => {
   };
   return User;
 };
+

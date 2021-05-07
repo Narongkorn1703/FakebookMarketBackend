@@ -5,6 +5,7 @@ const jwt = require("jsonwebtoken");
 
 exports.register = async (req, res, next) => {
   try {
+    const {userId} = req.user.id
     const {
       email,
       password,
@@ -12,11 +13,9 @@ exports.register = async (req, res, next) => {
       firstName,
       lastName,
       location,
-      bio,
-      avatar,
-      coverPhoto,
       birthDate,
     } = req.body;
+    console.log(req.body)
     const timeElapsed = Date.now();
     const today = new Date(timeElapsed);
     const JoinYear = today.toUTCString();
@@ -28,25 +27,23 @@ exports.register = async (req, res, next) => {
       });
     if (password !== confirmPassword)
       return res.status(400).json({ message: "password not match" });
+    console.log("check point1")
     const hashedPassword = await bcrypt.hash(password, +BCRYPT_SALT);
-    const users = await User.create({
+    const user = await User.create({
       email,
       firstName,
       lastName,
       password: hashedPassword,
       location,
-      bio,
-      avatar,
-      coverPhoto,
       birthDate,
       joinYear: JoinYear,
     });
 
-    const payload = { id: users.id, email, firstName, lastName, bio };
+    const payload = { id: user.id, email, firstName, lastName, bio };
     const token = jwt.sign(payload, JWT_SECRET, {
       expiresIn: +JWT_EXPIRES_IN,
     });
-    res.status(201).json({ token });
+    res.status(201).json({ message:"registered", });
   } catch (err) {
     next(err);
   }
@@ -112,20 +109,36 @@ exports.getProfile = async (req, res, next) => {
     payload: req.payload,
   });
 };
-exports.updateProfile = async (req, res, next) => {
+exports.updateLocation = async (req, res, next) => {
   const { id } = req.user;
   const {
-    firstName,
-    lastName,
     location,
-    avatar,
-    coverPhoto,
-    birthDate,
   } = req.body;
   await User.update(
-    { firstName, lastName, location, avatar, coverPhoto, birthDate },
+    {  location },
     { where: { id } }
   );
   const Updateduser = await User.findOne({ where: { id } });
   res.status(200).json({ message: "update complete", Updateduser });
+};
+
+exports.uploadAvatar = async (req, res, next) => {
+  const { id } = req.user;
+  try {
+    cloudinary.uploader.upload(req.file.path, async (err, result) => {
+      if (err) return next(err);
+      console.log(result);
+      await User.update(
+        {
+          avatar: result.secure_url,
+        },
+        { where: { id } }
+      );
+      const user = await User.findOne({ where: { id } });
+      fs.unlinkSync(req.file.path);
+      res.status(200).json({ avatar: user.avatar });
+    });
+  } catch (e) {
+    next(e);
+  }
 };
