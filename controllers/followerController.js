@@ -1,4 +1,5 @@
 const { Follower } = require("../models");
+const { Op } = require("sequelize");
 
 exports.getFollowers = async (req, res, next) => {
   try {

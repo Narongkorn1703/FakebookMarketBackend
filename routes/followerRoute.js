@@ -9,6 +9,6 @@ const { upload } = require("../middlewares/upload");
 router.get("/get-followers", authMid, follwerController.getFollowers);
 router.get("/get-following", authMid, follwerController.getFollowing);
 router.post("/follow/:id", authMid, follwerController.followSomeone);
-router.post("/unfollow/:id", authMid, follwerController.unfollowSomeone);
+router.delete("/unfollow/:id", authMid, follwerController.unfollowSomeone);
 
 module.exports = router;
