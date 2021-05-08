@@ -19,7 +19,8 @@ const storage = multer.diskStorage({
 
 exports.upload = multer({
     storage: storage,
-    fileFilter: (req, file, cb) => {
+  fileFilter: (req, file, cb) => {
+      console.log("this workss")
         if (
             file.mimetype.split("/")[1] == "jpeg" ||
             file.mimetype.split("/")[1] == "png" ||

@@ -53,9 +53,9 @@ module.exports = (sequelize, DataTypes) => {
   User.associate = (models) => {
     User.hasMany(models.Follower, {
       foreignKey: {
-        name: `userId`,
+        name: `followedId`,
         allowNull: false,
-        field: `user_id`,
+        field: `followed_id`,
       },
       onUpdate: `RESTRICT`,
       onDelete: `RESTRICT`,
@@ -144,4 +144,3 @@ module.exports = (sequelize, DataTypes) => {
   };
   return User;
 };
-

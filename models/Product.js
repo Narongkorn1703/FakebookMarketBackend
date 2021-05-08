@@ -2,26 +2,49 @@ module.exports = (sequelize, DataTypes) => {
   const Product = sequelize.define(
     "Product",
     {
-      title:DataTypes.STRING,  
-      photos: DataTypes.ARRAY(DataTypes.CHAR(2048)),
+      title: DataTypes.STRING,
       price: DataTypes.DECIMAL(10, 2),
       category: {
         type: DataTypes.ENUM,
-        values: ["Home & Garden",	"Clothing & Accessories",	"Electronics",	"Family",	"Hobbies",	"Entertainment", "Vehicle"]
+        values: [
+          "Home & Garden",
+          "Clothing & Accessories",
+          "Electronics",
+          "Family",
+          "Hobbies",
+          "Entertainment",
+          "Vehicle",
+        ],
       },
       subCategory: {
-        type: DataTypes.ENUM, 
-        values: ["Tools",
-        "Furniture",
-        "Garden",
-        "Appliances",
-        "Household",
-        "Jewelry & Accessories",	"Cellphones",	"Toys & Games",	"Sports & Outdoors",	"Books", "Movies & Music",
-        "Bag & Luggage","Electronics & Computers",	"Baby & kids","	Musical Instruments",	"Video Games",
-        "Men's Clothing & Shoes",		"Pet Supplies",	"Arts & Crafts"	,
-        "Women's Clothing & Shoes",		"Healthy & Beauty",	"Antiques & Collectibles",
-        "Auto Parts",	
-        "Bicycles","Vehicle","Property Rental"	
+        type: DataTypes.ENUM,
+        values: [
+          "Tools",
+          "Furniture",
+          "Garden",
+          "Appliances",
+          "Household",
+          "Jewelry & Accessories",
+          "Cellphones",
+          "Toys & Games",
+          "Sports & Outdoors",
+          "Books",
+          "Movies & Music",
+          "Bag & Luggage",
+          "Electronics & Computers",
+          "Baby & kids",
+          "	Musical Instruments",
+          "Video Games",
+          "Men's Clothing & Shoes",
+          "Pet Supplies",
+          "Arts & Crafts",
+          "Women's Clothing & Shoes",
+          "Healthy & Beauty",
+          "Antiques & Collectibles",
+          "Auto Parts",
+          "Bicycles",
+          "Vehicle",
+          "Property Rental",
         ],
       },
       condition: {
@@ -38,7 +61,16 @@ module.exports = (sequelize, DataTypes) => {
       },
       productStatus: {
         type: DataTypes.ENUM,
-        values: ["Pending", "Out of Stock", "Draft", "Available", "Sold", "Rented", "In Stock", "Single Item"]
+        values: [
+          "Pending",
+          "Out of Stock",
+          "Draft",
+          "Available",
+          "Sold",
+          "Rented",
+          "In Stock",
+          "Single Item",
+        ],
       },
       vehicleType: {
         type: DataTypes.STRING,
@@ -83,6 +115,15 @@ module.exports = (sequelize, DataTypes) => {
     });
 
     Product.hasMany(models.Saved, {
+      foreignKey: {
+        name: `productId`,
+        allowNull: false,
+        field: `product_id`,
+      },
+      onUpdate: `RESTRICT`,
+      onDelete: `RESTRICT`,
+    });
+    Product.hasMany(models.Photo, {
       foreignKey: {
         name: `productId`,
         allowNull: false,

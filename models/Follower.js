@@ -9,9 +9,9 @@ module.exports = (sequelize, DataTypes) => {
   Follower.associate = (models) => {
     Follower.belongsTo(models.User, {
       foreignKey: {
-        name: `userId`,
+        name: `followedId`,
         allowNull: false,
-        field: `user_id`,
+        field: `followed_id`,
       },
       onUpdate: `RESTRICT`,
       onDelete: `RESTRICT`,
