@@ -2,7 +2,7 @@ module.exports = (sequelize, DataTypes) => {
     const Photo = sequelize.define(
       "Photo",
         {
-            post: DataTypes.STRING(1200)
+          post: DataTypes.STRING(1200)
     
         },
      

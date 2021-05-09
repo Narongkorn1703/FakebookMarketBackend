@@ -18,78 +18,62 @@ exports.createProduct = async (req, res, next) => {
   try {
     const userId = req.user.id;
     console.log(req.file);
-      const {
-        title,
-        price,
-        brand,
-        category,
-        condition,
-        description,
-        optional,
-        location,
-        productType,
-        productStatus,
-        year,
-        model,
-        mileage,
-        fuelType,
-        estateFor,
-        estateType,
-        numberOfBedroom,
-        numberOfBathroom,
-        area,
-        catFriendly,
-        dogFriendly,
-      } = req.body;
-      const product = await Product.create({
-        title,
-        price,
-        brand,
-        category,
-        condition,
-        description,
-        optional,
-        location,
-        productType,
-        productStatus,
-        year,
-        model,
-        mileage,
-        fuelType,
-        estateFor,
-        estateType,
-        numberOfBedroom,
-        numberOfBathroom,
-        area,
-        catFriendly,
-        dogFriendly,
-        userId
-      });
-      if (req.file) {
-        uploadPhoto(req.file, product.id);
-      }
-      res.status(200).json({ message: "home created", product });
-    
-  } catch (err) {
-    next(err);
-  }
-};
-const uploadPhoto = async (file, id) => {
-  try {
-    await upload.single("image");
-    cloudinary.uploader.upload(file.path, async (err, result) => {
-      if (err) return next(err);
-      await Photo.create({
-        post: result.secure_url,
-        productId: id,
-      });
-
-      fs.unlinkSync(file.path);
+    const {
+      title,
+      price,
+      brand,
+      category,
+      condition,
+      description,
+      optional,
+      location,
+      productType,
+      productStatus,
+      year,
+      model,
+      mileage,
+      fuelType,
+      estateFor,
+      estateType,
+      numberOfBedroom,
+      numberOfBathroom,
+      area,
+      catFriendly,
+      dogFriendly,
+    } = req.body;
+    const product = await Product.create({
+      title,
+      price,
+      brand,
+      category,
+      condition,
+      description,
+      optional,
+      location,
+      productType,
+      productStatus,
+      year,
+      model,
+      mileage,
+      fuelType,
+      estateFor,
+      estateType,
+      numberOfBedroom,
+      numberOfBathroom,
+      area,
+      catFriendly,
+      dogFriendly,
+      userId,
     });
+    if (req.file) {
+      uploadPhoto(req.file, product.id);
+    }
+    res.status(200).json({ message: "home created", product });
   } catch (err) {
     next(err);
   }
 };
+
 
 exports.getAllDrafts = async (req, res, next) => {
   //ใช้เรียก Draft
@@ -105,7 +89,6 @@ exports.getAllDrafts = async (req, res, next) => {
 };
 
 exports.getProductById = async (req, res, next) => {
-  //ใช้เรียกดราฟได้
   try {
     const id = req.params.id;
     const product = await Product.findOne({ where: { id } });
@@ -117,7 +100,6 @@ exports.getProductById = async (req, res, next) => {
 
 exports.getProductsByProductType = async (req, res, next) => {
   try {
-    console.log("thiswork", req.params);
     const { productType } = req.params;
     const products = await Product.findAll({ where: { productType } });
     console.log(products, "yo");
@@ -140,70 +122,44 @@ exports.getProductsByUserId = async (req, res, next) => {
 exports.updateProductById = async (req, res, next) => {
   try {
     const id = req.params.id;
-    if (req.body.productType == "ITEM") {
-      const {
+    const {
+      title,
+      price,
+      category,
+      condition,
+      optional,
+      productStatus,
+      brand,
+      year,
+      model,
+      mileage,
+      fuelType,
+      productType,
+      estateFor,
+      estateType,
+      numberOfBedroom,
+      numberOfBathroom,
+      description,
+      area,
+      catFriendly,
+      location,
+      dogFriendly,
+    } = req.body;
+    const product = await Product.update(
+      {
         title,
         price,
-        brand,
         category,
         condition,
-        description,
         optional,
-        location,
-        productType,
         productStatus,
-      } = req.body;
-      const product = await Product.update({
-        title,
-        price,
-        brand,
-        category,
-        condition,
-        description,
-        optional,
-        location,
-        productType,
-        productStatus,
-      }, { where: { id } });
-      if (req.file) {
-        uploadPhoto(req.file, product.id);
-      }
-      res.status(200).json({ message: "item updated", product });
-    } else if (req.body.productType == "VEHICLE") {
-      const {
-        type,
-        price,
         brand,
         year,
         model,
-        description,
         mileage,
         fuelType,
-        location,
         productType,
-        productStatus,
-      } = req.body;
-      const product = await Product.update({
-        type,
-        price,
-        brand,
-        year,
-        model,
-        description,
-        mileage,
-        fuelType,
-        location,
-        productType,
-        productStatus,
-      }, { where: { id } });
-      if (req.file) {
-        uploadPhoto(req.file, product.id);
-      }
-      res.status(200).json({ message: "vehicle updated", product });
-    } else if (req.body.productType == "HOME") {
-      const {
         estateFor,
-        price,
         estateType,
         numberOfBedroom,
         numberOfBathroom,
@@ -212,28 +168,32 @@ exports.updateProductById = async (req, res, next) => {
         catFriendly,
         location,
         dogFriendly,
-        productType,
-        productStatus,
-      } = req.body;
-      const product = await Product.update({
-        estateFor,
-        price,
-        estateType,
-        numberOfBedroom,
-        numberOfBathroom,
-        description,
-        area,
-        catFriendly,
-        location,
-        dogFriendly,
-        productType,
-        productStatus,
-      }, { where: { id } });
-      if (req.file) {
-        uploadPhoto(req.file, product.id);
-      }
-      res.status(200).json({ message: "home updated", product });
+      },
+      { where: { id } }
+    );
+    if (req.file) {
+      await Photo.destroy({where:{productId:id}})
+      uploadPhoto(req.file, id);
     }
+
+    res.status(200).json({ message: "product updated", product });
+  } catch (err) {
+    next(err);
+  }
+};
+
+const uploadPhoto = async (file, id) => {
+  try {
+    await upload.single("image");
+    cloudinary.uploader.upload(file.path, async (err, result) => {
+      if (err) return next(err);
+      await Photo.create({
+        post: result.secure_url,
+        productId: id,
+      });
+
+      fs.unlinkSync(file.path);
+    });
   } catch (err) {
     next(err);
   }

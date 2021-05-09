@@ -83,34 +83,6 @@ exports.SignIn = async (req, res, next) => {
     next(err);
   }
 };
-exports.getProfile = async (req, res, next) => {
-  const {
-    email,
-    firstName,
-    lastName,
-    roles,
-    bio,
-    location,
-    avatar,
-    coverPhoto,
-    birthDate,
-    joinYear,
-  } = req.user;
-
-  res.status(200).json({
-    email,
-    firstName,
-    lastName,
-    roles,
-    bio,
-    location,
-    avatar,
-    coverPhoto,
-    birthDate,
-    joinYear,
-    payload: req.payload,
-  });
-};
 exports.updateLocation = async (req, res, next) => {
   const { id } = req.user;
   const { location } = req.body;
@@ -142,30 +114,9 @@ exports.uploadAvatar = async (req, res, next) => {
 };
 
 exports.getSellerCommerceProfile = async (req, res, next) => {
-  const {
-    email,
-    firstName,
-    lastName,
-    roles,
-    bio,
-    location,
-    avatar,
-    coverPhoto,
-    birthDate,
-    joinYear,
-  } = req.user;
-
+  const id = req.params.id
+  const sellerProfile = User.findOne({where:{id}})
   res.status(200).json({
-    email,
-    firstName,
-    lastName,
-    roles,
-    bio,
-    location,
-    avatar,
-    coverPhoto,
-    birthDate,
-    joinYear,
-    payload: req.payload,
+    sellerProfile
   });
 };
