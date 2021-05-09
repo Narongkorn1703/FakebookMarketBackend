@@ -8,6 +8,7 @@ const userRoute = require("./routes/userRoute");
 const productRoute = require("./routes/productRoute");
 const followerRoute = require("./routes/followerRoute");
 const savedRoute = require("./routes/savedRoute");
+const ratingRoute = require("./routes/ratingRoute");
 const cors = require("cors");
 const error = require("./middlewares/error");
 app.use(cors());
@@ -18,6 +19,7 @@ app.use(userRoute);
 app.use("/product", productRoute);
 app.use("/follower", followerRoute);
 app.use("/saved", savedRoute);
+app.use("/rating", ratingRoute);
 app.use((req, res) => {
   res.status(404).json({ message: "path not found on this server" });
 });

@@ -15,6 +15,16 @@ router.get(
 router.get("/get-user-products/:userId", productController.getProductsByUserId);
 router.get("/:id", productController.getProductById);
 
-router.post("/create-product", authMid, upload.single("image"), productController.createProduct);
-
+router.post(
+  "/create-product",
+  authMid,
+  upload.single("image"),
+  productController.createProduct
+);
+router.put(
+  "/update-product/:id",
+  authMid,
+  upload.single("image"),
+  productController.updateProductById
+);
 module.exports = router;

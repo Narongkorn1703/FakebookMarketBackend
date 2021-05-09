@@ -2,8 +2,13 @@ module.exports = (sequelize, DataTypes) => {
   const Rating = sequelize.define(
     "Rating",
     {
-      honor: DataTypes.INTEGER,
       score: DataTypes.DECIMAL(10, 1),
+      fairPricing: DataTypes.INTEGER,
+      friendliness: DataTypes.INTEGER,
+      itemDescription: DataTypes.INTEGER,
+      punctuality: DataTypes.INTEGER,
+      reliability: DataTypes.INTEGER,
+      responseTime: DataTypes.INTEGER,
     },
     {
       underscored: true,

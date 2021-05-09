@@ -7,7 +7,6 @@ const fs = require("fs");
 
 exports.register = async (req, res, next) => {
   try {
-    const { userId } = req.user.id;
     const {
       email,
       password,
@@ -15,12 +14,14 @@ exports.register = async (req, res, next) => {
       firstName,
       lastName,
       location,
+      gender,
       birthDate,
     } = req.body;
     console.log(req.body);
     const timeElapsed = Date.now();
-    const today = new Date(timeElapsed);
-    const JoinYear = today.toUTCString();
+    const today = new Date(Date.now()).toUTCString();
+    const joinYear = today;
+
     console.log(today);
     if (!password == "" && password.length < 6)
       return res.status(401).json({
@@ -37,14 +38,15 @@ exports.register = async (req, res, next) => {
       password: hashedPassword,
       location,
       birthDate,
-      joinYear: JoinYear,
+      joinYear,
+      gender,
     });
 
-    const payload = { id: user.id, email, firstName, lastName, bio };
+    const payload = { id: user.id, email, firstName, lastName, location, birthDate, joinYear, gender};
     const token = jwt.sign(payload, JWT_SECRET, {
       expiresIn: +JWT_EXPIRES_IN,
     });
-    res.status(201).json({ message: "registered" });
+    res.status(201).json({ message: "registered", token });
   } catch (err) {
     next(err);
   }
@@ -63,7 +65,7 @@ exports.SignIn = async (req, res, next) => {
     if (!isMatch)
       return res
         .status(400)
-        .json({ message: "usersname or password incorrect" });
+        .json({ message: "username or password incorrect" });
     const payload = {
       id: users.id,
       email: users.email,
@@ -137,4 +139,33 @@ exports.uploadAvatar = async (req, res, next) => {
   } catch (e) {
     next(e);
   }
+};
+
+exports.getSellerCommerceProfile = async (req, res, next) => {
+  const {
+    email,
+    firstName,
+    lastName,
+    roles,
+    bio,
+    location,
+    avatar,
+    coverPhoto,
+    birthDate,
+    joinYear,
+  } = req.user;
+
+  res.status(200).json({
+    email,
+    firstName,
+    lastName,
+    roles,
+    bio,
+    location,
+    avatar,
+    coverPhoto,
+    birthDate,
+    joinYear,
+    payload: req.payload,
+  });
 };

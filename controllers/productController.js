@@ -152,6 +152,7 @@ exports.getAllDrafts = async (req, res, next) => {
 };
 
 exports.getProductById = async (req, res, next) => {
+  //ใช้เรียกดราฟได้
   try {
     const id = req.params.id;
     const product = await Product.findOne({ where: { id } });
@@ -178,6 +179,108 @@ exports.getProductsByUserId = async (req, res, next) => {
     const userId = req.params.userId;
     const products = await Product.findAll({ where: { userId } });
     res.status(200).json({ message: "got all products" + userId, products });
+  } catch (err) {
+    next(err);
+  }
+};
+
+exports.updateProductById = async (req, res, next) => {
+  try {
+    const id = req.params.id;
+    if (req.body.productType == "ITEM") {
+      const {
+        title,
+        price,
+        brand,
+        category,
+        condition,
+        description,
+        optional,
+        location,
+        productType,
+        productStatus,
+      } = req.body;
+      const product = await Product.update({
+        title,
+        price,
+        brand,
+        category,
+        condition,
+        description,
+        optional,
+        location,
+        productType,
+        productStatus,
+      }, { where: { id } });
+      if (req.file) {
+        uploadPhoto(req.file, product.id);
+      }
+      res.status(200).json({ message: "item updated", product });
+    } else if (req.body.productType == "VEHICLE") {
+      const {
+        type,
+        price,
+        brand,
+        year,
+        model,
+        description,
+        mileage,
+        fuelType,
+        location,
+        productType,
+        productStatus,
+      } = req.body;
+      const product = await Product.update({
+        type,
+        price,
+        brand,
+        year,
+        model,
+        description,
+        mileage,
+        fuelType,
+        location,
+        productType,
+        productStatus,
+      }, { where: { id } });
+      if (req.file) {
+        uploadPhoto(req.file, product.id);
+      }
+      res.status(200).json({ message: "vehicle updated", product });
+    } else if (req.body.productType == "HOME") {
+      const {
+        estateFor,
+        price,
+        estateType,
+        numberOfBedroom,
+        numberOfBathroom,
+        description,
+        area,
+        catFriendly,
+        location,
+        dogFriendly,
+        productType,
+        productStatus,
+      } = req.body;
+      const product = await Product.update({
+        estateFor,
+        price,
+        estateType,
+        numberOfBedroom,
+        numberOfBathroom,
+        description,
+        area,
+        catFriendly,
+        location,
+        dogFriendly,
+        productType,
+        productStatus,
+      }, { where: { id } });
+      if (req.file) {
+        uploadPhoto(req.file, product.id);
+      }
+      res.status(200).json({ message: "home updated", product });
+    }
   } catch (err) {
     next(err);
   }
