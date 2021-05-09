@@ -18,7 +18,6 @@ exports.createProduct = async (req, res, next) => {
   try {
     const userId = req.user.id;
     console.log(req.file);
-    if (req.body.productType == "ITEM") {
       const {
         title,
         price,
@@ -30,6 +29,17 @@ exports.createProduct = async (req, res, next) => {
         location,
         productType,
         productStatus,
+        year,
+        model,
+        mileage,
+        fuelType,
+        estateFor,
+        estateType,
+        numberOfBedroom,
+        numberOfBathroom,
+        area,
+        catFriendly,
+        dogFriendly,
       } = req.body;
       const product = await Product.create({
         title,
@@ -42,81 +52,24 @@ exports.createProduct = async (req, res, next) => {
         location,
         productType,
         productStatus,
-        userId,
-      });
-      if (req.file) {
-        uploadPhoto(req.file, product.id);
-      }
-      res.status(200).json({ message: "item created", product });
-    } else if (req.body.productType == "VEHICLE") {
-      const {
-        type,
-        price,
-        brand,
         year,
         model,
-        description,
         mileage,
         fuelType,
-        location,
-        productType,
-        productStatus,
-      } = req.body;
-      const product = await Product.create({
-        type,
-        price,
-        brand,
-        year,
-        model,
-        description,
-        mileage,
-        fuelType,
-        location,
-        productType,
-        productStatus,
-        userId,
-      });
-      if (req.file) {
-        uploadPhoto(req.file, product.id);
-      }
-      res.status(200).json({ message: "vehicle created", product });
-    } else if (req.body.productType == "HOME") {
-      const {
         estateFor,
-        price,
         estateType,
         numberOfBedroom,
         numberOfBathroom,
-        description,
         area,
         catFriendly,
-        location,
         dogFriendly,
-        productType,
-        productStatus,
-      } = req.body;
-      const product = await Product.create({
-        estateFor,
-        price,
-        estateType,
-        numberOfBedroom,
-        numberOfBathroom,
-        description,
-        area,
-        catFriendly,
-        location,
-        dogFriendly,
-        productType,
-        productStatus,
-        userId,
+        userId
       });
       if (req.file) {
         uploadPhoto(req.file, product.id);
       }
       res.status(200).json({ message: "home created", product });
-    } else {
-      return res.status(400).json({ message: "Wrong type of product" });
-    }
+    
   } catch (err) {
     next(err);
   }
