@@ -70,7 +70,10 @@ module.exports = (sequelize, DataTypes) => {
           "Rented",
           "In Stock",
           "Single Item",
+          "Shipped",
+          "Paid"
         ],
+        defaultValue : "Draft"
       },
       vehicleType: {
         type: DataTypes.STRING,

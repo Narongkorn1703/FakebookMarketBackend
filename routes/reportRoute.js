@@ -6,6 +6,6 @@ const reportController = require("../controllers/reportController");
 const router = express.Router();
 const { upload } = require("../middlewares/upload");
 
-
+router.post("/create/:sellerId", authMid, reportController.createReport);
 
 module.exports = router;

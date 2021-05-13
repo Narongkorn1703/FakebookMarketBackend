@@ -21,18 +21,18 @@ module.exports = (sequelize, DataTypes) => {
   Report.associate = (models) => {
     Report.belongsTo(models.User, {
       foreignKey: {
-        name: `userId`,
+        name: `sellerId`,
         allowNull: false,
-        field: `user_id`,
+        field: `seller_id`,
       },
       onUpdate: `RESTRICT`,
       onDelete: `RESTRICT`,
     });
     Report.belongsTo(models.User, {
       foreignKey: {
-        name: `submitedId`,
+        name: `submittedId`,
         allowNull: false,
-        field: `submited_id`,
+        field: `submitted_id`,
       },
       onUpdate: `RESTRICT`,
       onDelete: `RESTRICT`,

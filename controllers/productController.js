@@ -4,7 +4,6 @@ const cloudinary = require("cloudinary").v2;
 const fs = require("fs");
 
 exports.getAllProducts = async (req, res, next) => {
-  //ใช้หน้าBrowseแสดงแค่ Title Price
   try {
     const products = await Product.findAll();
     res.status(200).json({ products });
