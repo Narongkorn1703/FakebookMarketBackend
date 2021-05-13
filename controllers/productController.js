@@ -5,7 +5,7 @@ const fs = require("fs");
 
 exports.getAllProducts = async (req, res, next) => {
   try {
-    const products = await Product.findAll();
+    const products = await Product.findAll({include: Photo});
     res.status(200).json({ products });
   } catch (err) {
     next(err);
