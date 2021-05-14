@@ -45,6 +45,7 @@ module.exports = (sequelize, DataTypes) => {
           "Bicycles",
           "Vehicle",
           "Property Rental",
+          "Home Sales"
         ],
       },
       condition: {

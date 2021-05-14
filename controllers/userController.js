@@ -42,7 +42,16 @@ exports.register = async (req, res, next) => {
       gender,
     });
 
-    const payload = { id: user.id, email, firstName, lastName, location, birthDate, joinYear, gender};
+    const payload = {
+      id: user.id,
+      email,
+      firstName,
+      lastName,
+      location,
+      birthDate,
+      joinYear,
+      gender,
+    };
     const token = jwt.sign(payload, JWT_SECRET, {
       expiresIn: +JWT_EXPIRES_IN,
     });
@@ -114,9 +123,9 @@ exports.uploadAvatar = async (req, res, next) => {
 };
 
 exports.getSellerCommerceProfile = async (req, res, next) => {
-  const id = req.params.id
-  const sellerProfile = User.findOne({where:{id}})
+  const id = req.params.id;
+  const sellerProfile = User.findOne({ where: { id } });
   res.status(200).json({
-    sellerProfile
+    sellerProfile,
   });
 };
