@@ -6,9 +6,10 @@ const fs = require("fs");
 
 exports.getAllProducts = async (req, res, next) => {
   try {
-    const products = await Product.findAll(
-      { where: { [Op.not]: { productStatus: "Draft" } } },
-      { include: Photo }
+    const products = await Product.findAll({
+       where: { [Op.not]: { productStatus: "Draft" } } ,
+      include: Photo 
+    }
     );
     res.status(200).json({ products });
   } catch (err) {
