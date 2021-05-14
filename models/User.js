@@ -32,9 +32,10 @@ module.exports = (sequelize, DataTypes) => {
         defaultValue: "USER",
         allowNull: false,
       },
-      bio: {
+      gender: {
         type: DataTypes.ENUM,
         values: ["MALE", "FEMALE", "OTHER"],
+        allowNull: false,
       },
       location: DataTypes.STRING,
       avatar: {
@@ -51,16 +52,16 @@ module.exports = (sequelize, DataTypes) => {
     }
   );
   User.associate = (models) => {
-    User.hasMany(models.Followers, {
+    User.hasMany(models.Follower, {
       foreignKey: {
-        name: `userId`,
+        name: `followedId`,
         allowNull: false,
-        field: `user_id`,
+        field: `followed_id`,
       },
       onUpdate: `RESTRICT`,
       onDelete: `RESTRICT`,
     });
-    User.hasMany(models.Followers, {
+    User.hasMany(models.Follower, {
       foreignKey: {
         name: `followerId`,
         allowNull: false,
@@ -87,7 +88,7 @@ module.exports = (sequelize, DataTypes) => {
       onUpdate: `RESTRICT`,
       onDelete: `RESTRICT`,
     });
-    User.hasMany(models.Products, {
+    User.hasMany(models.Product, {
       foreignKey: {
         name: `userId`,
         allowNull: false,

@@ -1,22 +1,22 @@
 module.exports = (sequelize, DataTypes) => {
-  const Followers = sequelize.define(
-    "Followers",
+  const Follower = sequelize.define(
+    "Follower",
     {},
     {
       underscored: true,
     }
   );
-  Followers.associate = (models) => {
-    Followers.belongsTo(models.User, {
+  Follower.associate = (models) => {
+    Follower.belongsTo(models.User, {
       foreignKey: {
-        name: `userId`,
+        name: `followedId`,
         allowNull: false,
-        field: `user_id`,
+        field: `followed_id`,
       },
       onUpdate: `RESTRICT`,
       onDelete: `RESTRICT`,
     });
-    Followers.belongsTo(models.User, {
+    Follower.belongsTo(models.User, {
       foreignKey: {
         name: `followerId`,
         allowNull: false,
@@ -26,5 +26,5 @@ module.exports = (sequelize, DataTypes) => {
       onDelete: `RESTRICT`,
     });
   };
-  return Followers;
+  return Follower;
 };

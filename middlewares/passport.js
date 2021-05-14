@@ -10,7 +10,7 @@ const JwtStrategy = new Strategy(options, async (payload, done) => {
   try {
     const user = await User.findOne({ where: { id: payload.id } });
     if (!user) done(null, false); //false makes error res status 401n
-    done(null, user); // req.users = users
+    done(null, user); // req.user = user
   } catch (err) {
     done(err, false);
   }
