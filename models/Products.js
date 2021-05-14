@@ -55,11 +55,11 @@ module.exports = (sequelize, DataTypes) => {
       numberOfBed: DataTypes.INTEGER,
       numberOfBathroom: DataTypes.INTEGER,
       area: DataTypes.STRING,
-      estate_type: {
+      estateType: {
         type: DataTypes.ENUM,
         values: ["Condo", "House", "Apartment"],
       },
-      estate_for: {
+      estateFor: {
         type: DataTypes.ENUM,
         values: ["RENT", "SALE"],
       },
@@ -72,8 +72,7 @@ module.exports = (sequelize, DataTypes) => {
         values: ["true", "false"],
       },
       boostStatus: {
-        type: DataTypes.ENUM,
-        values: ["true", "false"],
+        type: DataTypes.BOOLEAN,
       },
       bidValue: DataTypes.DECIMAL(10, 1),
     },
