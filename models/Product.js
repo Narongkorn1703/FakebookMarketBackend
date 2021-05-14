@@ -49,7 +49,12 @@ module.exports = (sequelize, DataTypes) => {
       },
       condition: {
         type: DataTypes.ENUM,
-        values: ["New", "Used - Like New", "Used - Good", "Used - Fair"],
+        values: [
+          "New",
+          "Used - Like New",
+          "Used - Good",
+          "Used - Fair",
+        ],
       },
       description: DataTypes.STRING,
       optional: DataTypes.STRING,
@@ -71,9 +76,9 @@ module.exports = (sequelize, DataTypes) => {
           "In Stock",
           "Single Item",
           "Shipped",
-          "Paid"
+          "Paid",
         ],
-        defaultValue : "Draft"
+        defaultValue: "Draft",
       },
       vehicleType: {
         type: DataTypes.STRING,
