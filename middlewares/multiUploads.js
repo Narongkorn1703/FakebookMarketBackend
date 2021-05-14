@@ -7,10 +7,7 @@ const storage = multer.diskStorage({
     cb(null, "./public/images");
   },
   filename: (req, file, cb) => {
-    cb(
-      null,
-      "GreenLike-" + Date.now() + "." + file.mimetype.split("/")[1]
-    );
+    cb(null, Date.now() + "." + file.mimetype.split("/")[1]);
   },
 });
 
@@ -30,25 +27,45 @@ const upload = multer({
   },
 });
 
+const cloudinaryImageUploadMethod = async (file) => {
+  return new Promise((resolve) => {
+    cloudinary.uploader.upload(file, (err, res) => {
+      if (err) return res.status(500).send("upload image error");
+      console.log(res.secure_url);
+
+      resolve({
+        res: res.secure_url,
+      });
+    });
+  });
+};
+
 module.exports.multiSend = async (req, res, next) => {
-  return await upload.array("multiImage")(req, res, () => {
-    console.log(req.files);
-    // if (req.file === undefined) return next();
-    if (!req.files) {
+  return await upload.array("multiImage")(req, res, async () => {
+    const urls = [];
+    const files = req.files;
+    // if (req.files === undefined) return next();
+    if (!files) {
       return res.json({
         message:
-          "Invalid image file type ; only accept jpeg, jpg and png (req.file === 'undefined')",
+          "Invalid image file type ; only accept jpeg, jpg and png (req.files === 'undefined')",
       });
     }
-    cloudinary.uploader.upload(
-      req.files.path,
-      async (err, result) => {
-        if (err) return next(err);
-        fs.unlinkSync(req.files.path); // ลบไฟล์ในโฟลเดอร์ local storage
+    for (const file of files) {
+      const { path } = file;
+      const newPath = await cloudinaryImageUploadMethod(path);
+      urls.push(newPath);
+    }
+    console.log(res.secure_url);
+    // cloudinary.uploader.upload(
+    //   req.files.path,
+    //   async (err, result) => {
+    //     if (err) return next(err);
+    //     fs.unlinkSync(req.files.path); // ลบไฟล์ในโฟลเดอร์ local storage
 
-        req.imgUrl = result.secure_url;
-        next();
-      }
-    );
+    //     req.imgUrl = result.secure_url;
+    //     // next();
+    //   }
+    // );
   });
 };

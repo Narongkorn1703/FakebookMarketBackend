@@ -16,7 +16,7 @@ exports.createProduct = async (req, res, next) => {
   //create product 3ประเภทรวมถึงสร้างDraftได้ด้วย
   try {
     const userId = req.user.id;
-    console.log(req.files);
+
     const {
       title,
       price,
