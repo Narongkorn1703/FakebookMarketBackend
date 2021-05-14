@@ -5,7 +5,7 @@ const fs = require("fs");
 
 exports.getAllProducts = async (req, res, next) => {
   try {
-    const products = await Product.findAll({include: Photo});
+    const products = await Product.findAll({ include: Photo });
     res.status(200).json({ products });
   } catch (err) {
     next(err);
@@ -16,7 +16,7 @@ exports.createProduct = async (req, res, next) => {
   //create product 3ประเภทรวมถึงสร้างDraftได้ด้วย
   try {
     const userId = req.user.id;
-    console.log(req.file);
+    console.log(req.files);
     const {
       title,
       price,
@@ -73,7 +73,6 @@ exports.createProduct = async (req, res, next) => {
   }
 };
 
-
 exports.getAllDrafts = async (req, res, next) => {
   //ใช้เรียก Draft
   try {
@@ -81,7 +80,9 @@ exports.getAllDrafts = async (req, res, next) => {
     const products = await Product.findAll({
       where: { productStatus: "Draft", userId },
     });
-    res.status(200).json({ message: "here are all of your Drafts", products });
+    res
+      .status(200)
+      .json({ message: "here are all of your Drafts", products });
   } catch (err) {
     next(err);
   }
@@ -100,9 +101,13 @@ exports.getProductById = async (req, res, next) => {
 exports.getProductsByProductType = async (req, res, next) => {
   try {
     const { productType } = req.params;
-    const products = await Product.findAll({ where: { productType } });
+    const products = await Product.findAll({
+      where: { productType },
+    });
     console.log(products, "yo");
-    res.status(200).json({ message: "got products " + productType, products });
+    res
+      .status(200)
+      .json({ message: "got products " + productType, products });
   } catch (err) {
     next(err);
   }
@@ -112,7 +117,9 @@ exports.getProductsByUserId = async (req, res, next) => {
   try {
     const userId = req.params.userId;
     const products = await Product.findAll({ where: { userId } });
-    res.status(200).json({ message: "got all products" + userId, products });
+    res
+      .status(200)
+      .json({ message: "got all products" + userId, products });
   } catch (err) {
     next(err);
   }
@@ -171,7 +178,7 @@ exports.updateProductById = async (req, res, next) => {
       { where: { id } }
     );
     if (req.file) {
-      await Photo.destroy({where:{productId:id}})
+      await Photo.destroy({ where: { productId: id } });
       uploadPhoto(req.file, id);
     }
 

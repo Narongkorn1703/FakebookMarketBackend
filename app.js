@@ -25,4 +25,6 @@ app.use((req, res) => {
 });
 app.use(error);
 // sequelize.sync({ alter: true }).then(() => console.log("DB Sync"));
-app.listen(PORT, () => console.log(`This server is running in ${PORT}`));
+app.listen(PORT, () =>
+  console.log(`This server is running in ${PORT}`)
+);
