@@ -20,7 +20,7 @@ exports.createProduct = async (req, res, next) => {
   //create product 3ประเภทรวมถึงสร้างDraftได้ด้วย
   try {
     const userId = req.user.id;
-
+    console.log(req.body)
     const {
       title,
       price,
@@ -68,8 +68,8 @@ exports.createProduct = async (req, res, next) => {
       dogFriendly,
       userId,
     });
-    if (req.file) {
-      uploadPhoto(req.file, product.id);
+    if (req.files) {
+      uploadPhotos(req.files, product.id);
     }
     res.status(200).json({ message: "home created", product });
   } catch (err) {
@@ -207,4 +207,51 @@ const uploadPhoto = async (file, id) => {
   } catch (err) {
     next(err);
   }
+};
+const uploadPhotos = async (files, id) => {
+  try {
+    await upload.array("multiImage");
+     const urls = [];
+      for (const file of files) {
+      const { path } = file;
+      const newPath = await cloudinaryImageUploadMethod(path);
+      urls.push(newPath);
+    }
+        console.log(res.secure_url);
+      fs.unlinkSync(file.path);
+ 
+  } catch (err) {
+    next(err);
+  }
+};
+
+
+module.exports.multiSend = async (req, res, next) => {
+  return await upload.array("multiImage")(req, res, async () => {
+    const urls = [];
+    const files = req.files;
+    // if (req.files === undefined) return next(); // สำหรับอัพโดยไม่เอารูป
+    if (!files) {
+      return res.json({
+        message:
+          "Invalid image file type ; only accept jpeg, jpg and png (req.files === 'undefined')",
+      });
+    }
+    for (const file of files) {
+      const { path } = file;
+      const newPath = await cloudinaryImageUploadMethod(path);
+      urls.push(newPath);
+    }
+    console.log(res.secure_url);
+    // cloudinary.uploader.upload(
+    //   req.files.path,
+    //   async (err, result) => {
+    //     if (err) return next(err);
+    //     fs.unlinkSync(req.files.path); // ลบไฟล์ในโฟลเดอร์ local storage
+
+    //     req.imgUrl = result.secure_url;
+    //     // next();
+    //   }
+    // );
+  });
 };

@@ -11,7 +11,7 @@ const storage = multer.diskStorage({
   },
 });
 
-const upload = multer({
+exports.upload = multer({
   storage: storage,
   fileFilter: (req, file, cb) => {
     if (

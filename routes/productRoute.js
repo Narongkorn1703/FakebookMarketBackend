@@ -4,8 +4,8 @@ const passport = require("passport");
 const authMid = passport.authenticate("jwt", { session: false });
 const productController = require("../controllers/productController");
 const router = express.Router();
-const { upload } = require("../middlewares/upload");
-const { multiSend } = require("../middlewares/multiUploads");
+const { upload } = require("../middlewares/multiUploads");
+
 
 router.get("/get-all-product", productController.getAllProducts);
 router.get("/get-all-draft", authMid, productController.getAllDrafts);
@@ -22,7 +22,6 @@ router.get("/:id", productController.getProductById);
 router.post(
   "/create-product",
   authMid,
-  multiSend,
   productController.createProduct
 );
 router.put(
