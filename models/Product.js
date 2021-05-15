@@ -3,7 +3,7 @@ module.exports = (sequelize, DataTypes) => {
     "Product",
     {
       title: DataTypes.STRING,
-      price: DataTypes.DECIMAL(10, 2),
+      price: DataTypes.STRING,
       category: {
         type: DataTypes.ENUM,
         values: [
@@ -14,50 +14,16 @@ module.exports = (sequelize, DataTypes) => {
           "Hobbies",
           "Entertainment",
           "Vehicle",
+          "Home Sales",
+          "Property Rental"
         ],
       },
-      subCategory: {
-        type: DataTypes.ENUM,
-        values: [
-          "Tools",
-          "Furniture",
-          "Garden",
-          "Appliances",
-          "Household",
-          "Jewelry & Accessories",
-          "Cellphones",
-          "Toys & Games",
-          "Sports & Outdoors",
-          "Books",
-          "Movies & Music",
-          "Bag & Luggage",
-          "Electronics & Computers",
-          "Baby & kids",
-          "	Musical Instruments",
-          "Video Games",
-          "Men's Clothing & Shoes",
-          "Pet Supplies",
-          "Arts & Crafts",
-          "Women's Clothing & Shoes",
-          "Healthy & Beauty",
-          "Antiques & Collectibles",
-          "Auto Parts",
-          "Bicycles",
-          "Vehicle",
-          "Property Rental",
-          "Home Sales"
-        ],
-      },
+      subCategory: DataTypes.STRING,
       condition: {
         type: DataTypes.ENUM,
-        values: [
-          "New",
-          "Used - Like New",
-          "Used - Good",
-          "Used - Fair",
-        ],
+        values: ["New", "Used - Like New", "Used - Good", "Used - Fair"],
       },
-      description: DataTypes.STRING,
+      description: DataTypes.TEXT,
       optional: DataTypes.STRING,
       location: DataTypes.STRING,
       productType: {
@@ -100,7 +66,7 @@ module.exports = (sequelize, DataTypes) => {
       area: DataTypes.STRING,
       estateType: {
         type: DataTypes.ENUM,
-        values: ["Condo", "House", "Apartment"],
+        values: ["Condo", "House", "Townhouse"],
       },
       estateFor: {
         type: DataTypes.ENUM,

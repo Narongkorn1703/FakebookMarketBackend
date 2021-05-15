@@ -4,6 +4,21 @@ const { Op } = require("Sequelize");
 const cloudinary = require("cloudinary").v2;
 const fs = require("fs");
 
+
+
+const cloudinaryImageUploadMethod = async (file) => {
+  return new Promise((resolve) => {
+    cloudinary.uploader.upload(file, (err, res) => {
+      if (err) return res.status(500).send("upload image error");
+      console.log(res.secure_url);
+      // fs.unlinkSync(req.files.path);
+      resolve({
+        res: res.secure_url,
+      });
+    });
+  });
+};
+
 exports.getAllProducts = async (req, res, next) => {
   try {
     const products = await Product.findAll({
@@ -21,6 +36,7 @@ exports.createProduct = async (req, res, next) => {
   try {
     const userId = req.user.id;
     console.log(req.body)
+    console.log(req.files)
     const {
       title,
       price,
@@ -69,7 +85,9 @@ exports.createProduct = async (req, res, next) => {
       userId,
     });
     if (req.files) {
-      uploadPhotos(req.files, product.id);
+      console.log("Checkpoint 1")
+      await uploadPhotos(req.files, product.id);
+         console.log("Checkpoint 2");
     }
     res.status(200).json({ message: "home created", product });
   } catch (err) {
@@ -205,23 +223,27 @@ const uploadPhoto = async (file, id) => {
       fs.unlinkSync(file.path);
     });
   } catch (err) {
-    next(err);
+      next(err);
   }
 };
 const uploadPhotos = async (files, id) => {
   try {
-    await upload.array("multiImage");
+    console.log("Checkpoint 3")
      const urls = [];
       for (const file of files) {
       const { path } = file;
       const newPath = await cloudinaryImageUploadMethod(path);
-      urls.push(newPath);
+        urls.push(newPath);
+        console.log("aaaa"
+          , newPath)
+        await Photo.create({
+          post: newPath.res,
+          productId: id,
+        });
     }
-        console.log(res.secure_url);
-      fs.unlinkSync(file.path);
- 
+    console.log(urls);
   } catch (err) {
-    next(err);
+    console.log(err)
   }
 };
 

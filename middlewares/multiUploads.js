@@ -32,7 +32,7 @@ const cloudinaryImageUploadMethod = async (file) => {
     cloudinary.uploader.upload(file, (err, res) => {
       if (err) return res.status(500).send("upload image error");
       console.log(res.secure_url);
-      // fs.unlinkSync(req.files.path);
+      fs.unlinkSync(req.files.path);
       resolve({
         res: res.secure_url,
       });

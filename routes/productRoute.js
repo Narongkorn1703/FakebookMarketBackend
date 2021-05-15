@@ -22,6 +22,7 @@ router.get("/:id", productController.getProductById);
 router.post(
   "/create-product",
   authMid,
+  upload.array("multiImage"),
   productController.createProduct
 );
 router.put(
