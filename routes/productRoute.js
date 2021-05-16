@@ -32,3 +32,8 @@ router.put(
   productController.updateProductById
 );
 module.exports = router;
+
+router.get(
+  "/get-limit-product-by-id/:userId/:offset/:limit",
+  productController.getProductsByUserIdWithLimit
+);

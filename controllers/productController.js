@@ -89,7 +89,7 @@ exports.createProduct = async (req, res, next) => {
       await uploadPhotos(req.files, product.id);
          console.log("Checkpoint 2");
     }
-    res.status(200).json({ message: "home created", product });
+    res.status(200).json({ message: "product created", product });
   } catch (err) {
     next(err);
   }
@@ -113,7 +113,7 @@ exports.getAllDrafts = async (req, res, next) => {
 exports.getProductById = async (req, res, next) => {
   try {
     const id = req.params.id;
-    const product = await Product.findOne({ where: { id } });
+    const product = await Product.findOne({ where: { id }, include: Photo });
     res.status(200).json({ message: "got product", product });
   } catch (err) {
     next(err);
@@ -125,6 +125,7 @@ exports.getProductsByProductType = async (req, res, next) => {
     const { productType } = req.params;
     const products = await Product.findAll({
       where: { productType },
+      include: Photo,
     });
     console.log(products, "yo");
     res
@@ -138,7 +139,10 @@ exports.getProductsByProductType = async (req, res, next) => {
 exports.getProductsByUserId = async (req, res, next) => {
   try {
     const userId = req.params.userId;
-    const products = await Product.findAll({ where: { userId } });
+    const products = await Product.findAll({
+      where: { userId },
+      include: Photo,
+    });
     res
       .status(200)
       .json({ message: "got all products" + userId, products });
@@ -248,6 +252,29 @@ const uploadPhotos = async (files, id) => {
 };
 
 
+exports.getProductsByUserIdWithLimit = async (req, res, next) => {
+  try {
+    
+    const { userId, offset, limit } = req.params
+   console.log(userId, offset, limit);
+    const products = await Product.findAll({
+      where: { userId },
+      include: Photo,
+      offset: +offset,
+      limit: +limit
+      
+    });
+    res.status(200).json({ message: "got all products" + userId, products });
+  } catch (err) {
+    next(err);
+  }
+};
+
+
+
+
+
+
 module.exports.multiSend = async (req, res, next) => {
   return await upload.array("multiImage")(req, res, async () => {
     const urls = [];
@@ -277,3 +304,20 @@ module.exports.multiSend = async (req, res, next) => {
     // );
   });
 };
+
+
+// const removeDecimal = async () => {
+//   const products = await Product.findAll();
+//   const fixedProducts = products.map((row) => {
+//     if (row.price.includes(".")) {
+//       Product.update({ price: row.price.slice(0, -3) }, { where: { id: row.id } });
+//       console.log(row.price.slice(0, -3));
+        
+//     }
+//   })
+// }
+  
+
+// removeDecimal()
+
+

@@ -15,6 +15,6 @@ router.put(
     upload.single("image"),
     userController.uploadAvatar
 );
-router.get("seller/:id", userController.getSellerCommerceProfile)
+router.get("/seller/:id", userController.getSellerCommerceProfile)
   
 module.exports = router;
