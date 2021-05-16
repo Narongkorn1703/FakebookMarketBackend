@@ -1,4 +1,4 @@
-const { Messenger } = require("../models");
+const { Messenger, User } = require("../models");
 
 exports.createMessages = async (req, res, next) => {
   try {
@@ -20,7 +20,13 @@ exports.getMessages = async (req, res, next) => {
   try {
     const senderId = req.user.id;
     console.log(req.user);
-    const messages = await Messenger.findAll({ where: { senderId } });
+    const messages = await Messenger.findAll({
+      where: { senderId },
+      include: {
+        model: User,
+        attributes: ["id", "firstName", "lastName", "email"],
+      },
+    });
     console.log(messages);
     res.status(200).json({ messages });
   } catch (err) {

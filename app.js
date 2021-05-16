@@ -12,6 +12,15 @@ const ratingRoute = require("./routes/ratingRoute");
 const MessengerRoute = require("./routes/messengerRoute");
 const cors = require("cors");
 const error = require("./middlewares/error");
+
+//create http instance
+const http = require("http").createServer(app);
+
+//create socket io instance
+const io = require("socket.io")(http);
+io.on("connection", (socket) => {
+  console.log("user connected");
+});
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -28,4 +37,4 @@ app.use((req, res) => {
 });
 app.use(error);
 //sequelize.sync({ alter: true }).then(() => console.log("DB Sync"));
-app.listen(PORT, () => console.log(`This server is running in ${PORT}`));
+http.listen(PORT, () => console.log(`This server is running in ${PORT}`));
