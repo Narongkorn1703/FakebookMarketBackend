@@ -14,6 +14,10 @@ router.get(
   productController.getProductsByProductType
 );
 router.get(
+  "/get-category/:category",
+  productController.getProductsByCategory
+);
+router.get(
   "/get-user-products/:userId",
   productController.getProductsByUserId
 );

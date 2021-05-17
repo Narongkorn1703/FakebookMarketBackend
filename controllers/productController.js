@@ -136,6 +136,31 @@ exports.getProductsByProductType = async (req, res, next) => {
   }
 };
 
+exports.getProductsByCategory = async (req, res, next) => {
+  try {
+    let { category } = req.params;
+    category = category.split("-").join(" ")
+    console.log(category)
+    if (category == "ITEM") {
+      const products = await Product.findAll({
+        where: { productType:category },
+        include: Photo,
+      });
+      return res.status(200).json({ message: "got products ", products });
+    }
+    const products = await Product.findAll({
+      where: { category },
+      include: Photo,
+    });
+    console.log(products, "yo");
+    res.status(200).json({ message: "got products ", products });
+  } catch (err) {
+    next(err);
+  }
+};
+
+
+
 exports.getProductsByUserId = async (req, res, next) => {
   try {
     const userId = req.params.userId;
