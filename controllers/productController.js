@@ -140,7 +140,6 @@ exports.getProductsByCategory = async (req, res, next) => {
   try {
     let { category } = req.params;
     category = category.split("-").join(" ")
-    console.log(category)
     if (category == "ITEM") {
       const products = await Product.findAll({
         where: { productType:category },
@@ -152,7 +151,6 @@ exports.getProductsByCategory = async (req, res, next) => {
       where: { category },
       include: Photo,
     });
-    console.log(products, "yo");
     res.status(200).json({ message: "got products ", products });
   } catch (err) {
     next(err);

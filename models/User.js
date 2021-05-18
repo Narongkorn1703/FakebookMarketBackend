@@ -39,7 +39,7 @@ module.exports = (sequelize, DataTypes) => {
       },
       location: DataTypes.STRING,
       avatar: {
-        type: DataTypes.STRING,
+        type: DataTypes.STRING(1200),
       },
       coverPhoto: {
         type: DataTypes.STRING,

@@ -4,20 +4,7 @@ module.exports = (sequelize, DataTypes) => {
     {
       title: DataTypes.STRING,
       price: DataTypes.STRING,
-      category: {
-        type: DataTypes.ENUM,
-        values: [
-          "Home & Garden",
-          "Clothing & Accessories",
-          "Electronics",
-          "Family",
-          "Hobbies",
-          "Entertainment",
-          "Vehicle",
-          "Home Sales",
-          "Property Rental"
-        ],
-      },
+      category: DataTypes.STRING,
       subCategory: DataTypes.STRING,
       condition: {
         type: DataTypes.ENUM,
