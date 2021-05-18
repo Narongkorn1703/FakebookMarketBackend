@@ -7,7 +7,7 @@ const messengerController = require("../controllers/messengerController");
 const userController = require("../controllers/userController");
 
 router.post("/:id", authMid, messengerController.createMessages);
-router.get("/", authMid, messengerController.getMessages);
+router.get("/:id", authMid, messengerController.getAllMessages);
 // router.post("/sign-in", userController.SignIn);
 // router.get("/profile/:id", authMid, userController.getSellerCommerceProfile);
 // router.patch("/edit", authMid, userController.updateLocation);

@@ -14,19 +14,19 @@ module.exports = (sequelize, DataTypes) => {
   );
   Messenger.associate = (models) => {
     Messenger.belongsTo(models.User, {
+      as: `Sender`,
       foreignKey: {
-        name: `senderId`,
         allowNull: false,
-        field: `sender_id`,
+        name: `senderId`,
       },
       onUpdate: `RESTRICT`,
       onDelete: `RESTRICT`,
     });
     Messenger.belongsTo(models.User, {
+      as: `Receiver`,
       foreignKey: {
-        name: `receiverId`,
         allowNull: false,
-        field: `receiver_id`,
+        name: `receiverId`,
       },
       onUpdate: `RESTRICT`,
       onDelete: `RESTRICT`,

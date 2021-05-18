@@ -1,4 +1,6 @@
-const { Messenger, User } = require("../models");
+const { Messenger, User, sequelize, Sequelize } = require("../models");
+
+const { Op } = require("Sequelize");
 
 exports.createMessages = async (req, res, next) => {
   try {
@@ -10,41 +12,74 @@ exports.createMessages = async (req, res, next) => {
       receiverId,
       text,
     });
+
     res.status(200).json({ messages });
   } catch (err) {
     next(err);
   }
 };
 
-exports.getMessages = async (req, res, next) => {
+exports.getAllMessages = async (req, res, next) => {
   try {
     const senderId = req.user.id;
-    console.log(req.user);
+    const receiverId = req.params.id;
+    //console.log(req.user);
+
+    //หาทั้งที่เราคุยกะเค้า เค้าคุยกะเรา message จะเปนก้อน arr ตอบกลับไปมา
     const messages = await Messenger.findAll({
-      where: { senderId },
-      include: {
-        model: User,
-        attributes: ["id", "firstName", "lastName", "email"],
+      where: {
+        [Op.or]: [
+          { senderId, receiverId },
+          { senderId: receiverId, receiverId: senderId },
+        ],
       },
+      include: [
+        {
+          model: User,
+          as: "Receiver",
+        },
+        {
+          model: User,
+          as: "Sender",
+        },
+      ],
     });
-    console.log(messages);
+
+    // ตอนแรกจะ getUserTalk
+
+    // const receiver = await Messenger.findAll({
+    //   where: {
+    //     senderId,
+    //   },
+    //   attributes: ["receiverId"],
+    // });
+
+    // const sender = await Messenger.findAll({
+    //   where: {
+    //     receiverId,
+    //   },
+
+    //   attributes: ["senderId"],
+    // });
+
+    // const disReceiverIds = receiver.reduce((acc, cur) => {
+    //   if (acc.includes(cur.receiverId)) return acc;
+    //   acc.push(cur.receiverId);
+    //   return acc;
+    // }, []);
+
+    // const disSenderIds = sender.reduce((acc, cur) => {
+    //   if (acc.includes(cur.senderId)) return acc;
+    //   acc.push(cur.senderId);
+    //   return acc;
+    // }, []);
+
+    // const finalIds = Array.from(new Set([...disReceiverIds, ...disSenderIds]));
+
+    // const talkUsers = await User.findAll({ where: { id: finalIds } });
+
     res.status(200).json({ messages });
   } catch (err) {
     next(err);
   }
 };
-//get all retrieve messages
-// exports.getAllMessages = async (req, res, next) => {
-//     //ใช้เรียก Draft
-//     try {
-//       const userId = req.user.id;
-//       const messages = await Messenger.findAll({
-//         where: { productStatus: "Draft", userId },
-//       });
-//       res
-//         .status(200)
-//         .json({ message: "here are all of your Drafts", products });
-//     } catch (err) {
-//       next(err);
-//     }
-//   };
