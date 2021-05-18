@@ -25,7 +25,8 @@ exports.register = async (req, res, next) => {
     console.log(today);
     if (!password == "" && password.length < 6)
       return res.status(401).json({
-        message: "password is required  and password must values more than 6",
+        message:
+          "password is required  and password must values more than 6",
       });
     if (password !== confirmPassword)
       return res.status(400).json({ message: "password not match" });
