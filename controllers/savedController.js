@@ -5,11 +5,11 @@ exports.getAllSaved = async (req, res, next) => {
   try {
     const userId = req.user.id;
     const productId = Number(req.params.productId);
-      const saveds = await Saved.findAll({ where: { userId } })
-      const arrSavedProductId = saveds.map((row) => {
-          return row.productId 
-      }) 
-      res.status(200).json({saveds, arrSavedProductId})
+    const saveds = await Saved.findAll({ where: { userId } });
+    const arrSavedProductId = saveds.map((row) => {
+      return row.productId;
+    });
+    res.status(200).json({ saveds, arrSavedProductId });
   } catch (err) {
     next(err);
   }
@@ -38,13 +38,30 @@ exports.createSaved = async (req, res, next) => {
 };
 
 exports.deleteSaved = async (req, res, next) => {
-  const userId = req.user.id;
-  const productId = Number(req.params.productId);
-  await Saved.destroy({
-    where: { [Op.and]: [{ userId }, { productId }] },
-  });
-  res.status(200).json({ message: "deleted" });
   try {
+    const userId = req.user.id;
+    const productId = Number(req.params.productId);
+    await Saved.destroy({
+      where: { [Op.and]: [{ userId }, { productId }] },
+    });
+    res.status(200).json({ message: "deleted" });
+  } catch (err) {
+    next(err);
+  }
+};
+
+exports.getIsSaved = async (req, res, next) => {
+  try {
+    const userId = req.user.id;
+    const productId = Number(req.params.productId);
+    const savedProduct = await Saved.findOne({
+      where: { [Op.and]: [{ userId }, { productId }] },
+    });
+    if (savedProduct) {
+      return res.status(200).json({ saved: true });
+    } else {
+      return res.status(200).json({ saved: false });
+    }
   } catch (err) {
     next(err);
   }

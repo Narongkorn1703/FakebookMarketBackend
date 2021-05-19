@@ -4,6 +4,19 @@ const { Op } = require("Sequelize");
 const cloudinary = require("cloudinary").v2;
 const fs = require("fs");
 
+const cloudinaryImageUploadMethod = async (file) => {
+  return new Promise((resolve) => {
+    cloudinary.uploader.upload(file, (err, res) => {
+      if (err) return res.status(500).send("upload image error");
+      console.log(res.secure_url);
+      // fs.unlinkSync(req.files.path);
+      resolve({
+        res: res.secure_url,
+      });
+    });
+  });
+};
+
 exports.getAllProducts = async (req, res, next) => {
   try {
     const products = await Product.findAll({
@@ -20,12 +33,14 @@ exports.createProduct = async (req, res, next) => {
   //create product 3ประเภทรวมถึงสร้างDraftได้ด้วย
   try {
     const userId = req.user.id;
-
+    console.log(req.body);
+    console.log(req.files);
     const {
       title,
       price,
       brand,
       category,
+      subCategory,
       condition,
       description,
       optional,
@@ -43,12 +58,14 @@ exports.createProduct = async (req, res, next) => {
       area,
       catFriendly,
       dogFriendly,
+      boostStatus,
     } = req.body;
     const product = await Product.create({
       title,
       price,
       brand,
       category,
+      subCategory,
       condition,
       description,
       optional,
@@ -67,11 +84,15 @@ exports.createProduct = async (req, res, next) => {
       catFriendly,
       dogFriendly,
       userId,
+      boostStatus,
     });
-    if (req.file) {
-      uploadPhoto(req.file, product.id);
+    if (req.files) {
+      console.log("Checkpoint 1");
+      await uploadPhotos(req.files, product.id);
+
+      console.log("Checkpoint 2");
     }
-    res.status(200).json({ message: "home created", product });
+    res.status(200).json({ message: "product created", product });
   } catch (err) {
     next(err);
   }
@@ -95,7 +116,10 @@ exports.getAllDrafts = async (req, res, next) => {
 exports.getProductById = async (req, res, next) => {
   try {
     const id = req.params.id;
-    const product = await Product.findOne({ where: { id } });
+    const product = await Product.findOne({
+      where: { id },
+      include: Photo,
+    });
     res.status(200).json({ message: "got product", product });
   } catch (err) {
     next(err);
@@ -107,6 +131,7 @@ exports.getProductsByProductType = async (req, res, next) => {
     const { productType } = req.params;
     const products = await Product.findAll({
       where: { productType },
+      include: Photo,
     });
     console.log(products, "yo");
     res
@@ -117,10 +142,36 @@ exports.getProductsByProductType = async (req, res, next) => {
   }
 };
 
+exports.getProductsByCategory = async (req, res, next) => {
+  try {
+    let { category } = req.params;
+    category = category.split("-").join(" ");
+    if (category == "ITEM") {
+      const products = await Product.findAll({
+        where: { productType: category },
+        include: Photo,
+      });
+      return res
+        .status(200)
+        .json({ message: "got products ", products });
+    }
+    const products = await Product.findAll({
+      where: { category },
+      include: Photo,
+    });
+    res.status(200).json({ message: "got products ", products });
+  } catch (err) {
+    next(err);
+  }
+};
+
 exports.getProductsByUserId = async (req, res, next) => {
   try {
     const userId = req.params.userId;
-    const products = await Product.findAll({ where: { userId } });
+    const products = await Product.findAll({
+      where: { userId },
+      include: Photo,
+    });
     res
       .status(200)
       .json({ message: "got all products" + userId, products });
@@ -155,6 +206,10 @@ exports.updateProductById = async (req, res, next) => {
       location,
       dogFriendly,
     } = req.body;
+    if (req.file) {
+      await Photo.destroy({ where: { productId: id } });
+      uploadPhoto(req.file, id);
+    }
     const product = await Product.update(
       {
         title,
@@ -181,10 +236,6 @@ exports.updateProductById = async (req, res, next) => {
       },
       { where: { id } }
     );
-    if (req.file) {
-      await Photo.destroy({ where: { productId: id } });
-      uploadPhoto(req.file, id);
-    }
 
     res.status(200).json({ message: "product updated", product });
   } catch (err) {
@@ -208,3 +259,83 @@ const uploadPhoto = async (file, id) => {
     next(err);
   }
 };
+const uploadPhotos = async (files, id) => {
+  try {
+    console.log("Checkpoint 3");
+    const urls = [];
+    for (const file of files) {
+      const { path } = file;
+      const newPath = await cloudinaryImageUploadMethod(path);
+      urls.push(newPath);
+      console.log("aaaa", newPath);
+      await Photo.create({
+        post: newPath.res,
+        productId: id,
+      });
+    }
+    console.log(urls);
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+exports.getProductsByUserIdWithLimit = async (req, res, next) => {
+  try {
+    const { userId, offset, limit } = req.params;
+    console.log(userId, offset, limit);
+    const products = await Product.findAll({
+      where: { userId },
+      include: Photo,
+      offset: +offset,
+      limit: +limit,
+    });
+    res
+      .status(200)
+      .json({ message: "got all products" + userId, products });
+  } catch (err) {
+    next(err);
+  }
+};
+
+module.exports.multiSend = async (req, res, next) => {
+  return await upload.array("multiImage")(req, res, async () => {
+    const urls = [];
+    const files = req.files;
+    // if (req.files === undefined) return next(); // สำหรับอัพโดยไม่เอารูป
+    if (!files) {
+      return res.json({
+        message:
+          "Invalid image file type ; only accept jpeg, jpg and png (req.files === 'undefined')",
+      });
+    }
+    for (const file of files) {
+      const { path } = file;
+      const newPath = await cloudinaryImageUploadMethod(path);
+      urls.push(newPath);
+    }
+    console.log(res.secure_url);
+    // cloudinary.uploader.upload(
+    //   req.files.path,
+    //   async (err, result) => {
+    //     if (err) return next(err);
+    //     fs.unlinkSync(req.files.path); // ลบไฟล์ในโฟลเดอร์ local storage
+
+    //     req.imgUrl = result.secure_url;
+    //     // next();
+    //   }
+    // );
+  });
+};
+
+// const removeDecimal = async () => {
+//   const products = await Product.findAll();
+//   const fixedProducts = products.map((row) => {
+//     if (row.price.includes(".")) {
+//       Product.update({ price: row.price.slice(0, -3) }, { where: { id: row.id } });
+//       console.log(row.price.slice(0, -3));
+
+//     }
+//   })
+// }
+
+// removeDecimal()

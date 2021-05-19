@@ -15,7 +15,8 @@
     "passport-google-oauth20": "^2.0.0",
     "passport-jwt": "^4.0.0",
     "sequelize": "^6.6.2",
-    "sequelize-cli": "^6.2.0"
+    "sequelize-cli": "^6.2.0",
+    "socket.io": "^4.1.1"
   },
   "name": "FakebookMarketBackend",
   "version": "1.0.0",
