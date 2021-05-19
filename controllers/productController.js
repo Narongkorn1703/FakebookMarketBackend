@@ -87,10 +87,7 @@ exports.createProduct = async (req, res, next) => {
       boostStatus,
     });
     if (req.files) {
-      console.log("Checkpoint 1");
       await uploadPhotos(req.files, product.id);
-
-      console.log("Checkpoint 2");
     }
     res.status(200).json({ message: "product created", product });
   } catch (err) {

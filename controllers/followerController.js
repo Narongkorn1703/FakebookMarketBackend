@@ -4,11 +4,13 @@ const { Op } = require("sequelize");
 exports.getFollowers = async (req, res, next) => {
   try {
     const followedId = req.user.id;
-    const followersRow = await Follower.findAll({ where: { followedId } });
-    const followers = followersRow.map((row) => {
-      return row.followerId
+    const followersRow = await Follower.findAll({
+      where: { followedId },
     });
-    res.status(200).json({followers, followersRow})
+    const followers = followersRow.map((row) => {
+      return row.followerId;
+    });
+    res.status(200).json({ followers, followersRow });
   } catch (err) {
     next(err);
   }
@@ -22,7 +24,9 @@ exports.followSomeone = async (req, res, next) => {
       where: { [Op.and]: [{ followerId }, { followedId }] },
     });
     if (alreadyFollowing) {
-      return res.status(200).json({message:"you already followed this user"})
+      return res
+        .status(200)
+        .json({ message: "you already followed this user" });
     }
     await Follower.create({ followerId, followedId });
     res
@@ -50,12 +54,13 @@ exports.unfollowSomeone = async (req, res, next) => {
 exports.getFollowing = async (req, res, next) => {
   try {
     const followerId = req.user.id;
-    console.log(req.user);
-    const followers = await Follower.findAll({ where: { followerId } });
-    console.log(followers);
+
+    const followers = await Follower.findAll({
+      where: { followerId },
+    });
+
     res.status(200).json({ followers });
   } catch (err) {
     next(err);
   }
 };
-

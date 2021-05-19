@@ -3,6 +3,7 @@ require("./middlewares/passport");
 const express = require("express");
 const app = express();
 const { PORT } = process.env;
+
 const { sequelize } = require("./models");
 const userRoute = require("./routes/userRoute");
 const productRoute = require("./routes/productRoute");
@@ -17,7 +18,8 @@ const error = require("./middlewares/error");
 const http = require("http").createServer(app);
 
 //create socket io instance
-const io = require("socket.io")(http);
+const io = require("socket.io")(http, { cors: { origin: "*" } });
+
 io.on("connection", (socket) => {
   console.log("user connected");
 
