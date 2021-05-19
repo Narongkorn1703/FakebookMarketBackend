@@ -18,6 +18,7 @@ const http = require("http").createServer(app);
 
 //create socket io instance
 const io = require("socket.io")(http);
+
 io.on("connection", (socket) => {
   console.log("user connected");
 
@@ -28,6 +29,8 @@ io.on("connection", (socket) => {
   // socket.on("chat message", (msg) => {
   //   io.emit("chat message", msg);
   // });
+
+  // socket.emit("hello", "world");
 
   socket.on("sendMessage", ({ text }) => {
     console.log("text from client senMessage", text);

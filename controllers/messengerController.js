@@ -33,16 +33,7 @@ exports.getAllMessages = async (req, res, next) => {
           { senderId: receiverId, receiverId: senderId },
         ],
       },
-      include: [
-        {
-          model: User,
-          as: "Receiver",
-        },
-        {
-          model: User,
-          as: "Sender",
-        },
-      ],
+      order: [["createdAt"]],
     });
 
     // ตอนแรกจะ getUserTalk
