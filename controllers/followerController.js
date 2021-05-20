@@ -50,9 +50,9 @@ exports.unfollowSomeone = async (req, res, next) => {
 exports.getFollowing = async (req, res, next) => {
   try {
     const followerId = req.user.id;
-    console.log(req.user);
+ 
     const followers = await Follower.findAll({ where: { followerId } });
-    console.log(followers);
+
     res.status(200).json({ followers });
   } catch (err) {
     next(err);

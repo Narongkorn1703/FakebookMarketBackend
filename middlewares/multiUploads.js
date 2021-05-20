@@ -31,7 +31,7 @@ const cloudinaryImageUploadMethod = async (file) => {
   return new Promise((resolve) => {
     cloudinary.uploader.upload(file, (err, res) => {
       if (err) return res.status(500).send("upload image error");
-      console.log(res.secure_url);
+  
       fs.unlinkSync(req.files.path);
       resolve({
         res: res.secure_url,
@@ -56,7 +56,7 @@ module.exports.multiSend = async (req, res, next) => {
       const newPath = await cloudinaryImageUploadMethod(path);
       urls.push(newPath);
     }
-    console.log(res.secure_url);
+ 
     // cloudinary.uploader.upload(
     //   req.files.path,
     //   async (err, result) => {

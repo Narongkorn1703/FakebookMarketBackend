@@ -14,7 +14,7 @@ router.get(
   productController.getProductsByProductType
 );
 router.get(
-  "/get-category/:category",
+  "/get-by-category/:category",
   productController.getProductsByCategory
 );
 router.get(
