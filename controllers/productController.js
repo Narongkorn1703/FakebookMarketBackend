@@ -4,8 +4,6 @@ const { Op } = require("Sequelize");
 const cloudinary = require("cloudinary").v2;
 const fs = require("fs");
 
-
-
 const cloudinaryImageUploadMethod = async (file) => {
   return new Promise((resolve) => {
     cloudinary.uploader.upload(file, (err, res) => {
@@ -36,12 +34,13 @@ exports.createProduct = async (req, res, next) => {
   //create product 3ประเภทรวมถึงสร้างDraftได้ด้วย
   try {
     const userId = req.user.id;
- 
+  
     const {
       title,
       price,
       brand,
       category,
+      subCategory,
       condition,
       description,
       optional,
@@ -59,12 +58,14 @@ exports.createProduct = async (req, res, next) => {
       area,
       catFriendly,
       dogFriendly,
+      boostStatus,
     } = req.body;
     const product = await Product.create({
       title,
       price,
       brand,
       category,
+      subCategory,
       condition,
       description,
       optional,
@@ -83,11 +84,10 @@ exports.createProduct = async (req, res, next) => {
       catFriendly,
       dogFriendly,
       userId,
+      boostStatus,
     });
     if (req.files) {
-   
       await uploadPhotos(req.files, product.id);
-        
     }
     res.status(200).json({ message: "product created", product });
   } catch (err) {
@@ -113,7 +113,10 @@ exports.getAllDrafts = async (req, res, next) => {
 exports.getProductById = async (req, res, next) => {
   try {
     const id = req.params.id;
-    const product = await Product.findOne({ where: { id }, include: Photo });
+    const product = await Product.findOne({
+      where: { id },
+      include: Photo,
+    });
     res.status(200).json({ message: "got product", product });
   } catch (err) {
     next(err);
@@ -143,7 +146,7 @@ exports.getProductsByProductType = async (req, res, next) => {
 exports.getProductsByCategory = async (req, res, next) => {
   try {
     let { category } = req.params;
-    category = category.split("-").join(" ")
+    category = category.split("-").join(" ");
     if (category == "ITEM") {
       const products = await Product.findAll({
         where: { productType: category },
@@ -153,8 +156,9 @@ exports.getProductsByCategory = async (req, res, next) => {
           ["createdAt", "DESC"],
         ],
       });
-  
-      return res.status(200).json({ message: "got products ", products });
+      return res
+        .status(200)
+        .json({ message: "got products ", products });
     }
     const products = await Product.findAll({
       where: { category },
@@ -169,8 +173,6 @@ exports.getProductsByCategory = async (req, res, next) => {
     next(err);
   }
 };
-
-
 
 exports.getProductsByUserId = async (req, res, next) => {
   try {
@@ -213,6 +215,10 @@ exports.updateProductById = async (req, res, next) => {
       location,
       dogFriendly,
     } = req.body;
+    if (req.file) {
+      await Photo.destroy({ where: { productId: id } });
+      uploadPhoto(req.file, id);
+    }
     const product = await Product.update(
       {
         title,
@@ -239,10 +245,6 @@ exports.updateProductById = async (req, res, next) => {
       },
       { where: { id } }
     );
-    if (req.file) {
-      await Photo.destroy({ where: { productId: id } });
-      uploadPhoto(req.file, id);
-    }
 
     res.status(200).json({ message: "product updated", product });
   } catch (err) {
@@ -263,51 +265,45 @@ const uploadPhoto = async (file, id) => {
       fs.unlinkSync(file.path);
     });
   } catch (err) {
-      next(err);
+    next(err);
   }
 };
 const uploadPhotos = async (files, id) => {
   try {
- 
-     const urls = [];
-      for (const file of files) {
+    console.log("Checkpoint 3");
+    const urls = [];
+    for (const file of files) {
       const { path } = file;
       const newPath = await cloudinaryImageUploadMethod(path);
-        urls.push(newPath);
-      
-        await Photo.create({
-          post: newPath.res,
-          productId: id,
-        });
+      urls.push(newPath);
+      console.log("aaaa", newPath);
+      await Photo.create({
+        post: newPath.res,
+        productId: id,
+      });
     }
   } catch (err) {
-    console.log(err)
+    console.log(err);
   }
 };
 
-
 exports.getProductsByUserIdWithLimit = async (req, res, next) => {
   try {
-    
-    const { userId, offset, limit } = req.params
-
+    const { userId, offset, limit } = req.params;
+    console.log(userId, offset, limit);
     const products = await Product.findAll({
       where: { userId },
       include: Photo,
       offset: +offset,
-      limit: +limit
-      
+      limit: +limit,
     });
-    res.status(200).json({ message: "got all products" + userId, products });
+    res
+      .status(200)
+      .json({ message: "got all products" + userId, products });
   } catch (err) {
     next(err);
   }
 };
-
-
-
-
-
 
 module.exports.multiSend = async (req, res, next) => {
   return await upload.array("multiImage")(req, res, async () => {
@@ -339,19 +335,15 @@ module.exports.multiSend = async (req, res, next) => {
   });
 };
 
-
 // const removeDecimal = async () => {
 //   const products = await Product.findAll();
 //   const fixedProducts = products.map((row) => {
 //     if (row.price.includes(".")) {
 //       Product.update({ price: row.price.slice(0, -3) }, { where: { id: row.id } });
 //       console.log(row.price.slice(0, -3));
-        
+
 //     }
 //   })
 // }
-  
 
 // removeDecimal()
-
-

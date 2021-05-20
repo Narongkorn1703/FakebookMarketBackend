@@ -71,19 +71,19 @@ module.exports = (sequelize, DataTypes) => {
       onDelete: `RESTRICT`,
     });
     User.hasMany(models.Messenger, {
+      as: `Receiver`,
       foreignKey: {
-        name: `receiverId`,
         allowNull: false,
-        field: `receiver_id`,
+        name: `receiverId`,
       },
       onUpdate: `RESTRICT`,
       onDelete: `RESTRICT`,
     });
     User.hasMany(models.Messenger, {
+      as: `Sender`,
       foreignKey: {
-        name: `senderId`,
         allowNull: false,
-        field: `sender_id`,
+        name: `senderId`,
       },
       onUpdate: `RESTRICT`,
       onDelete: `RESTRICT`,
