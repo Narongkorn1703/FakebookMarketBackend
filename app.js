@@ -31,6 +31,8 @@ io.on("connection", (socket) => {
   //   io.emit("chat message", msg);
   // });
 
+  // socket.emit("hello", "world");
+
   socket.on("sendMessage", ({ text }) => {
     console.log("text from client senMessage", text);
     io.emit("getMessage", {
@@ -66,6 +68,4 @@ app.use((req, res) => {
 });
 app.use(error);
 //sequelize.sync({ alter: true }).then(() => console.log("DB Sync"));
-http.listen(PORT, () =>
-  console.log(`This server is running in ${PORT}`)
-);
+http.listen(PORT, () => console.log(`This server is running in ${PORT}`));

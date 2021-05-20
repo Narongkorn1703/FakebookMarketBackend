@@ -22,7 +22,10 @@ exports.getAllProducts = async (req, res, next) => {
     const products = await Product.findAll({
       where: { [Op.not]: { productStatus: "Draft" } },
       include: Photo,
-      order: [["id","DESC"], ["createdAt", "DESC"]]
+      order: [
+        ["id", "DESC"],
+        ["createdAt", "DESC"],
+      ],
     });
     res.status(200).json({ products });
   } catch (err) {
@@ -34,7 +37,7 @@ exports.createProduct = async (req, res, next) => {
   //create product 3ประเภทรวมถึงสร้างDraftได้ด้วย
   try {
     const userId = req.user.id;
-  
+
     const {
       title,
       price,
@@ -102,9 +105,7 @@ exports.getAllDrafts = async (req, res, next) => {
     const products = await Product.findAll({
       where: { productStatus: "Draft", userId },
     });
-    res
-      .status(200)
-      .json({ message: "here are all of your Drafts", products });
+    res.status(200).json({ message: "here are all of your Drafts", products });
   } catch (err) {
     next(err);
   }
@@ -134,10 +135,8 @@ exports.getProductsByProductType = async (req, res, next) => {
         ["createdAt", "DESC"],
       ],
     });
-   
-    res
-      .status(200)
-      .json({ message: "got products " + productType, products });
+
+    res.status(200).json({ message: "got products " + productType, products });
   } catch (err) {
     next(err);
   }
@@ -156,9 +155,7 @@ exports.getProductsByCategory = async (req, res, next) => {
           ["createdAt", "DESC"],
         ],
       });
-      return res
-        .status(200)
-        .json({ message: "got products ", products });
+      return res.status(200).json({ message: "got products ", products });
     }
     const products = await Product.findAll({
       where: { category },
@@ -181,9 +178,7 @@ exports.getProductsByUserId = async (req, res, next) => {
       where: { userId },
       include: Photo,
     });
-    res
-      .status(200)
-      .json({ message: "got all products" + userId, products });
+    res.status(200).json({ message: "got all products" + userId, products });
   } catch (err) {
     next(err);
   }
@@ -297,9 +292,7 @@ exports.getProductsByUserIdWithLimit = async (req, res, next) => {
       offset: +offset,
       limit: +limit,
     });
-    res
-      .status(200)
-      .json({ message: "got all products" + userId, products });
+    res.status(200).json({ message: "got all products" + userId, products });
   } catch (err) {
     next(err);
   }
@@ -321,7 +314,7 @@ module.exports.multiSend = async (req, res, next) => {
       const newPath = await cloudinaryImageUploadMethod(path);
       urls.push(newPath);
     }
-  
+
     // cloudinary.uploader.upload(
     //   req.files.path,
     //   async (err, result) => {
