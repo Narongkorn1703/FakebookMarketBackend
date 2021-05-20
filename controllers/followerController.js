@@ -6,9 +6,9 @@ exports.getFollowers = async (req, res, next) => {
     const followedId = req.user.id;
     const followersRow = await Follower.findAll({ where: { followedId } });
     const followers = followersRow.map((row) => {
-      return row.followerId
+      return row.followerId;
     });
-    res.status(200).json({followers, followersRow})
+    res.status(200).json({ followers, followersRow });
   } catch (err) {
     next(err);
   }
@@ -22,7 +22,9 @@ exports.followSomeone = async (req, res, next) => {
       where: { [Op.and]: [{ followerId }, { followedId }] },
     });
     if (alreadyFollowing) {
-      return res.status(200).json({message:"you already followed this user"})
+      return res
+        .status(200)
+        .json({ message: "you already followed this user" });
     }
     await Follower.create({ followerId, followedId });
     res
@@ -40,9 +42,7 @@ exports.unfollowSomeone = async (req, res, next) => {
     await Follower.destroy({
       where: { [Op.and]: [{ followerId }, { followedId }] },
     });
-    res
-      .status(200)
-      .json({ message: followerId + " unfollowed " + followedId });
+    res.status(200).json({ message: followerId + " unfollowed " + followedId });
   } catch (err) {
     next(err);
   }
@@ -58,4 +58,3 @@ exports.getFollowing = async (req, res, next) => {
     next(err);
   }
 };
-

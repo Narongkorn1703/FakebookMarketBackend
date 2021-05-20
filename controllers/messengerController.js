@@ -1,14 +1,16 @@
-const { Messenger, User, sequelize, Sequelize } = require("../models");
+const { Messenger, User, sequelize, Sequelize, Product } = require("../models");
 
 const { Op } = require("Sequelize");
 
 exports.createMessages = async (req, res, next) => {
   try {
-    const { text } = req.body;
+    const { text, productId } = req.body;
+
     const receiverId = Number(req.params.id);
 
     const messages = await Messenger.create({
       senderId: req.user.id,
+      productId,
       receiverId,
       text,
     });
@@ -33,10 +35,14 @@ exports.getAllMessages = async (req, res, next) => {
           { senderId: receiverId, receiverId: senderId },
         ],
       },
+      include: [
+        {
+          model: Product,
+          attributes: ["title"],
+        },
+      ],
       order: [["createdAt"]],
     });
-
-    // ตอนแรกจะ getUserTalk
 
     res.status(200).json({ messages });
   } catch (err) {
