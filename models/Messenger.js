@@ -31,6 +31,14 @@ module.exports = (sequelize, DataTypes) => {
       onUpdate: `RESTRICT`,
       onDelete: `RESTRICT`,
     });
+    Messenger.belongsTo(models.Product, {
+      foreignKey: {
+        allowNull: false,
+        name: `productId`,
+      },
+      onUpdate: `RESTRICT`,
+      onDelete: `RESTRICT`,
+    });
   };
   return Messenger;
 };

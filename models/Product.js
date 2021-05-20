@@ -94,6 +94,14 @@ module.exports = (sequelize, DataTypes) => {
       onUpdate: `RESTRICT`,
       onDelete: `RESTRICT`,
     });
+    Product.hasMany(models.Messenger, {
+      foreignKey: {
+        name: `productId`,
+        allowNull: false,
+      },
+      onUpdate: `RESTRICT`,
+      onDelete: `RESTRICT`,
+    });
   };
   return Product;
 };

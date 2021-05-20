@@ -125,7 +125,7 @@ exports.uploadAvatar = async (req, res, next) => {
 exports.getSellerCommerceProfile = async (req, res, next) => {
   const id = req.params.id;
   const sellerProfile = await User.findOne({ where: { id } });
-  console.log(id, sellerProfile)
+  console.log(id, sellerProfile);
   res.status(200).json({
     sellerProfile,
   });
