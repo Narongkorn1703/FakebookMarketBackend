@@ -123,7 +123,16 @@ exports.getProductById = async (req, res, next) => {
     next(err);
   }
 };
-
+exports.deleteProductById = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    await Photo.destroy({ where: { productId: id } });
+    await Product.destroy({ where: { id } });
+    res.status(200).json({ message: "delete success" });
+  } catch (err) {
+    next(err);
+  }
+};
 exports.getProductsByProductType = async (req, res, next) => {
   try {
     const { productType } = req.params;

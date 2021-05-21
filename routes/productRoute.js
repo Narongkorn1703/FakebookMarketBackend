@@ -6,7 +6,6 @@ const productController = require("../controllers/productController");
 const router = express.Router();
 const { upload } = require("../middlewares/multiUploads");
 
-
 router.get("/get-all-product", productController.getAllProducts);
 router.get("/get-all-draft", authMid, productController.getAllDrafts);
 router.get(
@@ -17,10 +16,12 @@ router.get(
   "/get-by-category/:category",
   productController.getProductsByCategory
 );
-router.get(
-  "/get-user-products/:userId",
-  productController.getProductsByUserId
+router.delete(
+  "/delete-product/:id",
+  authMid,
+  productController.deleteProductById
 );
+router.get("/get-user-products/:userId", productController.getProductsByUserId);
 router.get("/:id", productController.getProductById);
 
 router.post(
