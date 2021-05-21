@@ -33,7 +33,7 @@ router.post(
 router.put(
   "/update-product/:id",
   authMid,
-  upload.single("image"),
+  upload.array("multiImage"),
   productController.updateProductById
 );
 module.exports = router;

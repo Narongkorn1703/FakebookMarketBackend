@@ -82,6 +82,7 @@ exports.SignIn = async (req, res, next) => {
       bio: users.bio,
       role: users.role,
       joinYear: users.joinYear,
+      avatar:users.avatar
     };
     const token = jwt.sign(payload, JWT_SECRET, {
       expiresIn: +JWT_EXPIRES_IN,
@@ -123,7 +124,9 @@ exports.uploadAvatar = async (req, res, next) => {
 
 exports.getSellerCommerceProfile = async (req, res, next) => {
   const id = req.params.id;
-  const sellerProfile = await User.findOne({ where: { id } });
+  const sellerProfile = await User.findOne({
+    where: { id },
+  });
   res.status(200).json({
     sellerProfile,
   });
