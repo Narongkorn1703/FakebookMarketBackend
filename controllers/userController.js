@@ -17,12 +17,11 @@ exports.register = async (req, res, next) => {
       gender,
       birthDate,
     } = req.body;
-   
+
     const timeElapsed = Date.now();
     const today = new Date(Date.now()).toUTCString();
     const joinYear = today;
 
-  
     if (!password == "" && password.length < 6)
       return res.status(401).json({
         message:
@@ -30,7 +29,7 @@ exports.register = async (req, res, next) => {
       });
     if (password !== confirmPassword)
       return res.status(400).json({ message: "password not match" });
-  
+
     const hashedPassword = await bcrypt.hash(password, +BCRYPT_SALT);
     const user = await User.create({
       email,
@@ -107,7 +106,7 @@ exports.uploadAvatar = async (req, res, next) => {
   try {
     cloudinary.uploader.upload(req.file.path, async (err, result) => {
       if (err) return next(err);
-     
+
       await User.update(
         {
           avatar: result.secure_url,
@@ -126,11 +125,7 @@ exports.uploadAvatar = async (req, res, next) => {
 exports.getSellerCommerceProfile = async (req, res, next) => {
   const id = req.params.id;
   const sellerProfile = await User.findOne({ where: { id } });
-<<<<<<< HEAD
   // console.log(id, sellerProfile);
-=======
-  console.log(id, sellerProfile);
->>>>>>> messenger-dev
   res.status(200).json({
     sellerProfile,
   });
