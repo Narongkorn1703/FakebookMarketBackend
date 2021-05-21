@@ -8,7 +8,7 @@ const cloudinaryImageUploadMethod = async (file) => {
   return new Promise((resolve) => {
     cloudinary.uploader.upload(file, (err, res) => {
       if (err) return res.status(500).send("upload image error");
-      console.log(res.secure_url);
+
       // fs.unlinkSync(req.files.path);
       resolve({
         res: res.secure_url,
@@ -22,6 +22,10 @@ exports.getAllProducts = async (req, res, next) => {
     const products = await Product.findAll({
       where: { [Op.not]: { productStatus: "Draft" } },
       include: Photo,
+      order: [
+        ["id", "DESC"],
+        ["createdAt", "DESC"],
+      ],
     });
     res.status(200).json({ products });
   } catch (err) {
@@ -33,8 +37,7 @@ exports.createProduct = async (req, res, next) => {
   //create product 3ประเภทรวมถึงสร้างDraftได้ด้วย
   try {
     const userId = req.user.id;
-    console.log(req.body);
-    console.log(req.files);
+
     const {
       title,
       price,
@@ -102,9 +105,7 @@ exports.getAllDrafts = async (req, res, next) => {
     const products = await Product.findAll({
       where: { productStatus: "Draft", userId },
     });
-    res
-      .status(200)
-      .json({ message: "here are all of your Drafts", products });
+    res.status(200).json({ message: "here are all of your Drafts", products });
   } catch (err) {
     next(err);
   }
@@ -138,11 +139,13 @@ exports.getProductsByProductType = async (req, res, next) => {
     const products = await Product.findAll({
       where: { productType },
       include: Photo,
+      order: [
+        ["id", "DESC"],
+        ["createdAt", "DESC"],
+      ],
     });
-    console.log(products, "yo");
-    res
-      .status(200)
-      .json({ message: "got products " + productType, products });
+
+    res.status(200).json({ message: "got products " + productType, products });
   } catch (err) {
     next(err);
   }
@@ -156,14 +159,20 @@ exports.getProductsByCategory = async (req, res, next) => {
       const products = await Product.findAll({
         where: { productType: category },
         include: Photo,
+        order: [
+          ["id", "DESC"],
+          ["createdAt", "DESC"],
+        ],
       });
-      return res
-        .status(200)
-        .json({ message: "got products ", products });
+      return res.status(200).json({ message: "got products ", products });
     }
     const products = await Product.findAll({
       where: { category },
       include: Photo,
+      order: [
+        ["id", "DESC"],
+        ["createdAt", "DESC"],
+      ],
     });
     res.status(200).json({ message: "got products ", products });
   } catch (err) {
@@ -178,9 +187,7 @@ exports.getProductsByUserId = async (req, res, next) => {
       where: { userId },
       include: Photo,
     });
-    res
-      .status(200)
-      .json({ message: "got all products" + userId, products });
+    res.status(200).json({ message: "got all products" + userId, products });
   } catch (err) {
     next(err);
   }
@@ -279,7 +286,6 @@ const uploadPhotos = async (files, id) => {
         productId: id,
       });
     }
-    console.log(urls);
   } catch (err) {
     console.log(err);
   }
@@ -295,9 +301,7 @@ exports.getProductsByUserIdWithLimit = async (req, res, next) => {
       offset: +offset,
       limit: +limit,
     });
-    res
-      .status(200)
-      .json({ message: "got all products" + userId, products });
+    res.status(200).json({ message: "got all products" + userId, products });
   } catch (err) {
     next(err);
   }
@@ -319,7 +323,7 @@ module.exports.multiSend = async (req, res, next) => {
       const newPath = await cloudinaryImageUploadMethod(path);
       urls.push(newPath);
     }
-    console.log(res.secure_url);
+
     // cloudinary.uploader.upload(
     //   req.files.path,
     //   async (err, result) => {

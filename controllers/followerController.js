@@ -44,9 +44,7 @@ exports.unfollowSomeone = async (req, res, next) => {
     await Follower.destroy({
       where: { [Op.and]: [{ followerId }, { followedId }] },
     });
-    res
-      .status(200)
-      .json({ message: followerId + " unfollowed " + followedId });
+    res.status(200).json({ message: followerId + " unfollowed " + followedId });
   } catch (err) {
     next(err);
   }
