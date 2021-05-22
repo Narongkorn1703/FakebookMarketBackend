@@ -29,7 +29,7 @@ exports.createSaved = async (req, res, next) => {
   try {
     const userId = req.user.id;
     const productId = Number(req.params.productId);
-
+    console.log(userId);
     const alreadySaved = await Saved.findOne({
       where: { [Op.and]: [{ userId }, { productId }] },
     });

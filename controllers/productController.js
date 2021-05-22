@@ -1,4 +1,4 @@
-const { Product, Photo } = require("../models");
+const { Product, Photo, Saved } = require("../models");
 const { upload } = require("../middlewares/upload");
 const { Op } = require("Sequelize");
 const cloudinary = require("cloudinary").v2;
@@ -105,7 +105,9 @@ exports.getAllDrafts = async (req, res, next) => {
     const products = await Product.findAll({
       where: { productStatus: "Draft", userId },
     });
-    res.status(200).json({ message: "here are all of your Drafts", products });
+    res
+      .status(200)
+      .json({ message: "here are all of your Drafts", products });
   } catch (err) {
     next(err);
   }
@@ -127,6 +129,7 @@ exports.deleteProductById = async (req, res, next) => {
   try {
     const { id } = req.params;
     await Photo.destroy({ where: { productId: id } });
+    await Saved.destroy({ where: { productId: id } });
     await Product.destroy({ where: { id } });
     res.status(200).json({ message: "delete success" });
   } catch (err) {
@@ -145,7 +148,9 @@ exports.getProductsByProductType = async (req, res, next) => {
       ],
     });
 
-    res.status(200).json({ message: "got products " + productType, products });
+    res
+      .status(200)
+      .json({ message: "got products " + productType, products });
   } catch (err) {
     next(err);
   }
@@ -164,7 +169,9 @@ exports.getProductsByCategory = async (req, res, next) => {
           ["createdAt", "DESC"],
         ],
       });
-      return res.status(200).json({ message: "got products ", products });
+      return res
+        .status(200)
+        .json({ message: "got products ", products });
     }
     const products = await Product.findAll({
       where: { category },
@@ -187,7 +194,9 @@ exports.getProductsByUserId = async (req, res, next) => {
       where: { userId },
       include: Photo,
     });
-    res.status(200).json({ message: "got all products" + userId, products });
+    res
+      .status(200)
+      .json({ message: "got all products" + userId, products });
   } catch (err) {
     next(err);
   }
@@ -301,7 +310,9 @@ exports.getProductsByUserIdWithLimit = async (req, res, next) => {
       offset: +offset,
       limit: +limit,
     });
-    res.status(200).json({ message: "got all products" + userId, products });
+    res
+      .status(200)
+      .json({ message: "got all products" + userId, products });
   } catch (err) {
     next(err);
   }
