@@ -21,10 +21,7 @@ router.delete(
   authMid,
   productController.deleteProductById
 );
-router.get(
-  "/get-user-products/:userId",
-  productController.getProductsByUserId
-);
+router.get("/get-user-products/:userId", productController.getProductsByUserId);
 router.get("/:id", productController.getProductById);
 
 router.post(
@@ -36,7 +33,7 @@ router.post(
 router.put(
   "/update-product/:id",
   authMid,
-  upload.single("image"),
+  upload.array("multiImage"),
   productController.updateProductById
 );
 module.exports = router;

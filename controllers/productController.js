@@ -228,9 +228,11 @@ exports.updateProductById = async (req, res, next) => {
       location,
       dogFriendly,
     } = req.body;
-    if (req.file) {
+    if (req.files) {
+      console.log("checkpoint 1")
       await Photo.destroy({ where: { productId: id } });
-      uploadPhoto(req.file, id);
+      uploadPhotos(req.files, id);
+       console.log("checkpoint 4");
     }
     const product = await Product.update(
       {

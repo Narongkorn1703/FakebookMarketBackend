@@ -24,8 +24,7 @@ exports.register = async (req, res, next) => {
 
     if (!password == "" && password.length < 6)
       return res.status(401).json({
-        message:
-          "password is required  and password must values more than 6",
+        message: "password is required  and password must values more than 6",
       });
     if (password !== confirmPassword)
       return res.status(400).json({ message: "password not match" });
@@ -83,6 +82,7 @@ exports.SignIn = async (req, res, next) => {
       bio: users.bio,
       role: users.role,
       joinYear: users.joinYear,
+      avatar:users.avatar
     };
     const token = jwt.sign(payload, JWT_SECRET, {
       expiresIn: +JWT_EXPIRES_IN,
@@ -124,8 +124,9 @@ exports.uploadAvatar = async (req, res, next) => {
 
 exports.getSellerCommerceProfile = async (req, res, next) => {
   const id = req.params.id;
-  const sellerProfile = await User.findOne({ where: { id } });
-  // console.log(id, sellerProfile);
+  const sellerProfile = await User.findOne({
+    where: { id },
+  });
   res.status(200).json({
     sellerProfile,
   });
