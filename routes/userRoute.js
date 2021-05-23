@@ -10,11 +10,11 @@ router.post("/sign-in", userController.SignIn);
 router.get("/profile/:id", authMid, userController.getSellerCommerceProfile);
 router.patch("/edit", authMid, userController.updateLocation);
 router.put(
-    "/upload-avatar",
-    authMid,
-    upload.single("image"),
-    userController.uploadAvatar
+  "/upload-avatar",
+  authMid,
+  upload.single("image"),
+  userController.uploadAvatar
 );
-router.get("/seller/:id", userController.getSellerCommerceProfile)
-  
+router.get("/seller/:id", userController.getSellerCommerceProfile);
+
 module.exports = router;

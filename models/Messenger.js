@@ -36,8 +36,6 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         name: `productId`,
       },
-      onUpdate: `RESTRICT`,
-      onDelete: `RESTRICT`,
     });
   };
   return Messenger;

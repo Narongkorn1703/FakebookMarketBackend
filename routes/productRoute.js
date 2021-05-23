@@ -22,6 +22,8 @@ router.delete(
   productController.deleteProductById
 );
 router.get("/get-user-products/:userId", productController.getProductsByUserId);
+router.get("/get-seller-product/:id", productController.getSellerByProductId);
+
 router.get("/:id", productController.getProductById);
 
 router.post(
