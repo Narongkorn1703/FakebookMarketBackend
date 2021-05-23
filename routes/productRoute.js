@@ -21,7 +21,10 @@ router.delete(
   authMid,
   productController.deleteProductById
 );
-router.get("/get-user-products/:userId", productController.getProductsByUserId);
+router.get(
+  "/get-user-products/:userId",
+  productController.getProductsByUserId
+);
 router.get("/:id", productController.getProductById);
 
 router.post(
@@ -29,6 +32,16 @@ router.post(
   authMid,
   upload.array("multiImage"),
   productController.createProduct
+);
+router.patch(
+  "/sold/:id",
+  authMid,
+  productController.updateProductSold
+);
+router.patch(
+  "/available/:id",
+  authMid,
+  productController.updateProductAvailable
 );
 router.put(
   "/update-product/:id",

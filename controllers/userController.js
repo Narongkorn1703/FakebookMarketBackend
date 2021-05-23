@@ -24,7 +24,8 @@ exports.register = async (req, res, next) => {
 
     if (!password == "" && password.length < 6)
       return res.status(401).json({
-        message: "password is required  and password must values more than 6",
+        message:
+          "password is required  and password must values more than 6",
       });
     if (password !== confirmPassword)
       return res.status(400).json({ message: "password not match" });
@@ -82,7 +83,7 @@ exports.SignIn = async (req, res, next) => {
       bio: users.bio,
       role: users.role,
       joinYear: users.joinYear,
-      avatar:users.avatar
+      avatar: users.avatar,
     };
     const token = jwt.sign(payload, JWT_SECRET, {
       expiresIn: +JWT_EXPIRES_IN,
@@ -104,9 +105,10 @@ exports.uploadAvatar = async (req, res, next) => {
   const { id } = req.user;
 
   try {
+    console.log("req.file :>> ", req.file);
     cloudinary.uploader.upload(req.file.path, async (err, result) => {
       if (err) return next(err);
-
+      // หลังบ้านยิงได้อยู่แล้ว ทำไมติดหน้าบ้านหว่า
       await User.update(
         {
           avatar: result.secure_url,
@@ -118,7 +120,8 @@ exports.uploadAvatar = async (req, res, next) => {
       res.status(200).json({ avatar: user.avatar });
     });
   } catch (e) {
-    next(e);
+    // next(e);
+    res.status(400).json(e);
   }
 };
 

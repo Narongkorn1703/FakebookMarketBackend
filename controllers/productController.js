@@ -229,10 +229,10 @@ exports.updateProductById = async (req, res, next) => {
       dogFriendly,
     } = req.body;
     if (req.files) {
-      console.log("checkpoint 1")
+      console.log("checkpoint 1");
       await Photo.destroy({ where: { productId: id } });
       uploadPhotos(req.files, id);
-       console.log("checkpoint 4");
+      console.log("checkpoint 4");
     }
     const product = await Product.update(
       {
@@ -263,6 +263,32 @@ exports.updateProductById = async (req, res, next) => {
 
     res.status(200).json({ message: "product updated", product });
   } catch (err) {
+    next(err);
+  }
+};
+exports.updateProductSold = async (req, res, next) => {
+  const { id } = req.params;
+  try {
+    await Product.update(
+      { productStatus: "Sold" },
+      { where: { id } }
+    );
+    res.status(200).json({ message: "product sold!" });
+  } catch (err) {
+    console.log(err);
+    next(err);
+  }
+};
+exports.updateProductAvailable = async (req, res, next) => {
+  const { id } = req.params;
+  try {
+    await Product.update(
+      { productStatus: "Available" },
+      { where: { id } }
+    );
+    res.status(200).json({ message: "product Available!" });
+  } catch (err) {
+    console.log(err);
     next(err);
   }
 };

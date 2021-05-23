@@ -1,10 +1,10 @@
 const cloudinary = require("cloudinary").v2;
 const fs = require("fs");
 cloudinary.config({
-    cloud_name: "darkmancer",
-    api_key: "111775957868488",
-    api_secret: "lLvvfpZzG44eKd-n1mxBPGXRIN8",
-  });
+  cloud_name: "darkmancer",
+  api_key: "111775957868488",
+  api_secret: "lLvvfpZzG44eKd-n1mxBPGXRIN8",
+});
 
 const multer = require("multer");
 
@@ -18,13 +18,14 @@ const storage = multer.diskStorage({
 });
 
 exports.upload = multer({
-    storage: storage,
+  storage: storage,
   fileFilter: (req, file, cb) => {
-   
-        if (
-            file.mimetype.split("/")[1] == "jpeg" ||
-            file.mimetype.split("/")[1] == "png" ||
-            file.mimetype.split("/")[1] == "jpg"
+    console.log("req upload", req);
+    console.log("file", file);
+    if (
+      file.mimetype.split("/")[1] == "jpeg" ||
+      file.mimetype.split("/")[1] == "png" ||
+      file.mimetype.split("/")[1] == "jpg"
     )
       cb(null, true);
     else {
