@@ -70,6 +70,7 @@ exports.getAllMessagesIncProduct = async (req, res, next) => {
         ],
       },
     });
+
     const product = await Product.findOne({
       where: { id: +productId },
       include: Photo,
@@ -275,6 +276,29 @@ exports.getAllMessagesAndProduct = async (req, res, next) => {
     });
     //console.log(messagesByProduct);
     res.status(200).json({ arr });
+  } catch (err) {
+    next(err);
+  }
+};
+
+exports.getAllMessagesWithProduct = async (req, res, next) => {
+  try {
+    const senderId = req.user.id;
+    const receiverId = req.params.id;
+    const productId = req.params.productId;
+
+    //หาทั้งที่เราคุยกะเค้า เค้าคุยกะเรา message จะเปนก้อน arr ตอบกลับไปมา
+    const messages = await Messenger.findAll({
+      where: {
+        productId: productId,
+        [Op.or]: [
+          { senderId, receiverId },
+          { senderId: receiverId, receiverId: senderId },
+        ],
+      },
+    });
+
+    res.status(200).json({ messages });
   } catch (err) {
     next(err);
   }

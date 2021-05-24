@@ -19,6 +19,12 @@ router.get(
   messengerController.getAllMessagesIncProduct
 );
 router.get(
+  "/getMessageWithProduct/:id/:productId",
+  authMid,
+  messengerController.getAllMessagesWithProduct
+);
+
+router.get(
   "/getTalkAndProduct",
   authMid,
   messengerController.getAllMessagesAndProduct

@@ -45,13 +45,6 @@ io.on("connection", (socket) => {
     });
   });
 
-  socket.on(
-    "sendMessageFromBetweenUser",
-    ({ text, productId, senderId, receiverId }) => {
-      console.log("text from between", text);
-    }
-  );
-
   socket.on("disconnect", function () {
     console.log("Disconnected!");
   });
