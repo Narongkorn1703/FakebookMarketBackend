@@ -230,8 +230,8 @@ exports.updateProductById = async (req, res, next) => {
     } = req.body;
     if (req.files) {
       console.log("checkpoint 1");
-      await Photo.destroy({ where: { productId: id } });
-      uploadPhotos(req.files, id);
+      // await Photo.destroy({ where: { productId: id } });
+      await uploadPhotos(req.files, id);
       console.log("checkpoint 4");
     }
     const product = await Product.update(

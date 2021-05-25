@@ -1,4 +1,4 @@
-const { Follower, User, Product } = require("../models");
+const { Follower, User, Product, sequelize } = require("../models");
 const { Op } = require("sequelize");
 
 exports.getFollowers = async (req, res, next) => {
@@ -63,11 +63,22 @@ exports.getFollowing = async (req, res, next) => {
   try {
     const followerId = req.user.id;
 
-    const followers = await Follower.findAll({
+    const follower = await Follower.findAll({
       where: { followerId },
     });
+    const followedId = follower.map((flw, idx) => {
+      return flw.followedId;
+    });
+    const userFollowed = await User.findAll({
+      where: {
+        id: {
+          // [Op.all]: sequelize.literal(followedId),
+          [Op.in]: followedId,
+        },
+      },
+    });
 
-    res.status(200).json({ followers });
+    res.status(200).json({ follower, userFollowed });
   } catch (err) {
     next(err);
   }
