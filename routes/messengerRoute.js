@@ -14,11 +14,6 @@ router.get(
   messengerController.getMessagesByProductId
 );
 router.get(
-  "/getMessageIncProduct/:id/:productId",
-  authMid,
-  messengerController.getAllMessagesIncProduct
-);
-router.get(
   "/getMessageWithProduct/:id/:productId",
   authMid,
   messengerController.getAllMessagesWithProduct
@@ -32,16 +27,5 @@ router.get(
 
 router.get("/:id", authMid, messengerController.getAllMessages);
 router.post("/:id", authMid, messengerController.createMessages);
-
-// router.post("/sign-in", userController.SignIn);
-// router.get("/profile/:id", authMid, userController.getSellerCommerceProfile);
-// router.patch("/edit", authMid, userController.updateLocation);
-// router.put(
-//     "/upload-avatar",
-//     authMid,
-//     upload.single("image"),
-//     userController.uploadAvatar
-// );
-// router.get("seller/:id", userController.getSellerCommerceProfile)
 
 module.exports = router;
