@@ -7,9 +7,11 @@ const options = {
   jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
 };
 const JwtStrategy = new Strategy(options, async (payload, done) => {
+  // console.log("payload", payload);
   try {
     const user = await User.findOne({ where: { id: payload.id } });
     if (!user) done(null, false); //false makes error res status 401n
+    // console.log(user);
     done(null, user); // req.user = user
   } catch (err) {
     done(err, false);

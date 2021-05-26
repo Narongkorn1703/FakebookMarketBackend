@@ -1,4 +1,5 @@
-const { Product, Photo, Saved } = require("../models");
+const { Product, Photo, Saved, User } = require("../models");
+
 const { upload } = require("../middlewares/upload");
 const { Op } = require("Sequelize");
 const cloudinary = require("cloudinary").v2;
@@ -105,9 +106,7 @@ exports.getAllDrafts = async (req, res, next) => {
     const products = await Product.findAll({
       where: { productStatus: "Draft", userId },
     });
-    res
-      .status(200)
-      .json({ message: "here are all of your Drafts", products });
+    res.status(200).json({ message: "here are all of your Drafts", products });
   } catch (err) {
     next(err);
   }
@@ -125,6 +124,7 @@ exports.getProductById = async (req, res, next) => {
     next(err);
   }
 };
+
 exports.deleteProductById = async (req, res, next) => {
   try {
     const { id } = req.params;
@@ -148,9 +148,7 @@ exports.getProductsByProductType = async (req, res, next) => {
       ],
     });
 
-    res
-      .status(200)
-      .json({ message: "got products " + productType, products });
+    res.status(200).json({ message: "got products " + productType, products });
   } catch (err) {
     next(err);
   }
@@ -169,9 +167,7 @@ exports.getProductsByCategory = async (req, res, next) => {
           ["createdAt", "DESC"],
         ],
       });
-      return res
-        .status(200)
-        .json({ message: "got products ", products });
+      return res.status(200).json({ message: "got products ", products });
     }
     const products = await Product.findAll({
       where: { category },
@@ -194,9 +190,7 @@ exports.getProductsByUserId = async (req, res, next) => {
       where: { userId },
       include: Photo,
     });
-    res
-      .status(200)
-      .json({ message: "got all products" + userId, products });
+    res.status(200).json({ message: "got all products" + userId, products });
   } catch (err) {
     next(err);
   }
@@ -269,10 +263,7 @@ exports.updateProductById = async (req, res, next) => {
 exports.updateProductSold = async (req, res, next) => {
   const { id } = req.params;
   try {
-    await Product.update(
-      { productStatus: "Sold" },
-      { where: { id } }
-    );
+    await Product.update({ productStatus: "Sold" }, { where: { id } });
     res.status(200).json({ message: "product sold!" });
   } catch (err) {
     console.log(err);
@@ -282,10 +273,7 @@ exports.updateProductSold = async (req, res, next) => {
 exports.updateProductAvailable = async (req, res, next) => {
   const { id } = req.params;
   try {
-    await Product.update(
-      { productStatus: "Available" },
-      { where: { id } }
-    );
+    await Product.update({ productStatus: "Available" }, { where: { id } });
     res.status(200).json({ message: "product Available!" });
   } catch (err) {
     console.log(err);
@@ -311,13 +299,13 @@ const uploadPhoto = async (file, id) => {
 };
 const uploadPhotos = async (files, id) => {
   try {
-    console.log("Checkpoint 3");
+    // console.log("Checkpoint 3");
     const urls = [];
     for (const file of files) {
       const { path } = file;
       const newPath = await cloudinaryImageUploadMethod(path);
       urls.push(newPath);
-      console.log("aaaa", newPath);
+      // console.log("aaaa", newPath);
       await Photo.create({
         post: newPath.res,
         productId: id,
@@ -331,16 +319,31 @@ const uploadPhotos = async (files, id) => {
 exports.getProductsByUserIdWithLimit = async (req, res, next) => {
   try {
     const { userId, offset, limit } = req.params;
-    console.log(userId, offset, limit);
+    // console.log(userId, offset, limit);
     const products = await Product.findAll({
       where: { userId },
       include: Photo,
       offset: +offset,
       limit: +limit,
     });
-    res
-      .status(200)
-      .json({ message: "got all products" + userId, products });
+    res.status(200).json({ message: "got all products" + userId, products });
+  } catch (err) {
+    next(err);
+  }
+};
+
+exports.getSellerByProductId = async (req, res, next) => {
+  try {
+    const id = req.params.id;
+    const product = await Product.findOne({
+      where: { id },
+      include: [
+        {
+          model: User,
+        },
+      ],
+    });
+    res.status(200).json({ product });
   } catch (err) {
     next(err);
   }
@@ -388,3 +391,11 @@ module.exports.multiSend = async (req, res, next) => {
 // }
 
 // removeDecimal()
+
+// exports.getSellerByProductId = async (req, res, next) => {
+//   const id = req.params.id;
+//   const sellerProfile = await User.findOne({
+//     where: { id },
+//     // include: User,
+//   });
+// };

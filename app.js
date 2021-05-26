@@ -20,32 +20,30 @@ const http = require("http").createServer(app);
 //create socket io instance
 const io = require("socket.io")(http, { cors: { origin: "*" } });
 
+let users = [];
+
 io.on("connection", (socket) => {
   console.log("user connected");
 
-  // socket.on("connected", function (msg) {
-  //   console.log("texts", msg);
-  // });
+  socket.on("join_productId", (data) => {
+    socket.join(data);
+    console.log("User Joined productId " + data);
+  });
 
-  // socket.on("chat message", (msg) => {
-  //   io.emit("chat message", msg);
-  // });
-
-  // socket.emit("hello", "world");
-
-  socket.on("sendMessage", ({ text }) => {
-    console.log("text from client senMessage", text);
-    io.emit("getMessage", {
+  socket.on("sendMessage", ({ text, productId, senderId, receiverId }) => {
+    console.log(
+      "text from client senMessage",
       text,
+      productId,
+      receiverId,
+      senderId
+    );
+    io.to(productId).emit("getMessage", {
+      text,
+      receiverId,
+      senderId,
     });
   });
-  //io.emit("connected", msg);
-
-  // socket.on("newChatMessage", function (data) {
-  //   console.log("messageFromClient", data);
-  // });
-  //   io.emit("newChatMessage", data);
-  //});
 
   socket.on("disconnect", function () {
     console.log("Disconnected!");
@@ -67,5 +65,5 @@ app.use((req, res) => {
   res.status(404).json({ message: "path not found on this server" });
 });
 app.use(error);
-//sequelize.sync({ alter: true }).then(() => console.log("DB Sync"));
+//sequelize.sync({ force: true }).then(() => console.log("DB Sync"));
 http.listen(PORT, () => console.log(`This server is running in ${PORT}`));

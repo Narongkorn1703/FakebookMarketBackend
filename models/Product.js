@@ -99,8 +99,6 @@ module.exports = (sequelize, DataTypes) => {
         name: `productId`,
         allowNull: false,
       },
-      onUpdate: `RESTRICT`,
-      onDelete: `RESTRICT`,
     });
   };
   return Product;

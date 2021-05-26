@@ -7,11 +7,7 @@ const { upload } = require("../middlewares/upload");
 const userController = require("../controllers/userController");
 router.post("/register", userController.register);
 router.post("/sign-in", userController.SignIn);
-router.get(
-  "/profile/:id",
-  authMid,
-  userController.getSellerCommerceProfile
-);
+router.get("/profile/:id", authMid, userController.getSellerCommerceProfile);
 router.patch("/edit", authMid, userController.updateLocation);
 router.patch(
   "/upload-avatar",
